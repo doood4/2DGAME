@@ -12,9 +12,10 @@ def handle_events():
 
 
 # initialization code
-open_canvas(720 ,720)
+open_canvas(800 ,720)
 running = True
 test2 = load_image('test2.png')
+test3 = load_image('test3.png')
 
 
 # game main loop code
@@ -24,7 +25,7 @@ while running:
     clear_canvas()
 
     #게임틀
-    test2.draw(360,360)
+    test3.draw(400,360)
     #진영
 
     #다리
