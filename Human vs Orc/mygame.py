@@ -4,5 +4,6 @@ import start_state
 import main_state
 
 # fill here
-open_canvas(720,720)
+open_canvas(800,720)
+
 game_framework.run(main_state)
