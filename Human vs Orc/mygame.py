@@ -5,5 +5,8 @@ import main_state
 
 # fill here
 open_canvas(800,720)
+hide_cursor()
+
+
 
 game_framework.run(main_state)
