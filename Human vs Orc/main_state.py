@@ -11,38 +11,37 @@ name = "MainState"
 
 mx = 0
 my = 0
+
+gold = 50
+
 cursor = None
 click = False
 
 back_frame = None
 commandbar = None
 
-footman1 = None
-footman2 = None
-knight = None
+peasantList= []
 
+map = None
 card = None
 cardList = []
 
 timer = 0
 
 def enter():
-    global footman1,footman2,knight,commandbar,back_frame,cursor,card,cardList
+    global peasantList,commandbar,back_frame,cursor,card,cardList
 
+    peasant = Peasant()
+    peasantList.append(peasant)
 
-    footman1 = Footman()
-    footman2 = Footman()
-    knight = Knight()
     back_frame = load_image('back_frame.png')
     commandbar = load_image('Images\\commandbar.png')
     cursor = load_image('Images\\cursor.png')
 
 def exit():
-    global footman1,footman2,knight,cursor
+    global peasant,footman1,footman2,knight,cursor
 
-    del(footman1)
-    del(footman2)
-    del(knight)
+    del(peasant)
     del(back_frame)
     del(cursor)
 
@@ -54,7 +53,7 @@ def resume():
 
 
 def handle_events():
-    global mx,my,click
+    global mx,my,click,peasantList
 
     events = get_events()
     for event in events:
@@ -69,6 +68,9 @@ def handle_events():
             elif event.key == SDLK_p:
                 game_framework.push_state(pause_state)
             elif event.key == SDLK_q:
+                peasant = Peasant()
+                peasantList.append(peasant)
+
                 pass
             elif event.key == SDLK_w:
                 pass
@@ -79,6 +81,7 @@ def handle_events():
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
                 click = True
+
         elif event.type == SDL_MOUSEBUTTONUP:
             if event.button == SDL_BUTTON_LEFT:
                 click = False
@@ -87,12 +90,9 @@ def handle_events():
 
 def update():
    global timer
+   for peasant in peasantList:
+       peasant.update()
 
-   footman1.update()
-   if(timer > 20):
-       footman2.update()
-   if(timer > 40):
-       knight.update()
    delay(0.1)
    timer += 1
 
@@ -100,11 +100,9 @@ def draw_scene():
     back_frame.draw(360, 360, 720, 720)
     commandbar.draw(600,60 , 400, 120)
 
-    footman1.draw()
-    if timer > 20:
-        footman2.draw()
-    if timer > 40:
-        knight.draw()
+    for peasant in peasantList:
+        peasant.draw()
+
     # 커서는 최후방
     cursor.clip_draw(click * 50, 0, 50, 50, mx, my, 40, 40)
 
