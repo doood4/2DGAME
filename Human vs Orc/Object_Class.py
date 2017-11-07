@@ -1,19 +1,22 @@
 from pico2d import *
-
+import main_state
 
 class Card:
     image = None
-
     def __init__(self):
-        self.x, self.y = 0, 0
-        self.xsize = 70
-        self.ysize = 100
-        self.frame = 0
+        self.type = main_state.card_type
+        self.no = main_state.card_no
+        self.cost = 50
+        self.xsize = 60
+        self.ysize = 80
+
+        if Card.image == None:
+            Card.image = load_image('Images\\human_cards.png')
 
     def update(self):
         pass
 
     def draw(self):
-        self.image.clip_draw(self.frame * 50, 0, 70, 100,
-                             self.x, self.y,self.size,self.size)
+        pass
+
 

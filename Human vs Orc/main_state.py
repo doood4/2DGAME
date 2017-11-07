@@ -11,37 +11,119 @@ name = "MainState"
 
 mx = 0
 my = 0
+ms = 0
+build = False
 
-gold = 50
+card_type = 0
+card_no = 0
+
+Gold = 200
+ATK = 0
+DEF = 0
+
+selection = -1
 
 cursor = None
 click = False
 
 back_frame = None
 commandbar = None
+qwer = None
+sqwer = None
+numbers = None
+unitselect = None
 
 peasantList= []
+unitList = []
+cardList = []
+numList =  [0,1,2,3,4]
 
 map = None
-card = None
-cardList = []
 
 timer = 0
 
-def enter():
-    global peasantList,commandbar,back_frame,cursor,card,cardList
+# 숫자그리는 함수(변수,좌표)
+def draw_number(A,x,y):
 
+    i = 10
+    Num = []
+    count =0
+    font = load_image('Images\\numbers.png')
+    if A == 0:
+        font.clip_draw(0 * 20, 0, 20, 20, x, y)
+    else:
+        while A != 0:
+            a = A % i
+            Num.append(a)
+            A = (A - a) // 10
+            count += 1
+
+        for n in range(count):
+            font.clip_draw(Num[n] * 20, 0, 20, 20, x - 10 * n, y)
+
+# 카드 그리기
+def draw_cards():
+    global cardList
+    #current
+    for i in range(4):
+        cardList[i].image.clip_draw(cardList[i].type * 60, 0, 60,80,70,450 - cardList[i].no*100)
+    #next
+    cardList[4].image.clip_draw(cardList[4].type*60,0,60,80,60,40, 40,60)
+
+# 카드 초기 설정
+def init_cards():
+    global numList,cardList,card_type,card_no
+
+    for i in range(5):
+        x = random.randint(0,len(numList)-1)
+        card_type = numList[x]
+        card_no = i
+        card = Card()
+        cardList.append(card)
+        numList.remove(card_type)
+
+# 카드 바꾸기
+def change_card():
+    global selection, cardList,numList, card_no,card_type
+
+    numList.append(cardList[selection].type)
+    cardList[selection].type = cardList[4].type
+    del (cardList[4])
+    x = random.randint(0, len(numList) - 1)
+    card_type = numList[x]
+    card_no = 4
+    card = Card()
+    cardList.append(card)
+    numList.remove(card_type)
+
+# 유닛 빌드여부
+def unit_build():
+    global mx,my,selection, cardList, unitselect
+
+    if selection != -1:
+        unitselect.clip_draw(50 * (cardList[selection].type - 1), 0, 50, 50, mx, my,40,40)
+
+
+def enter():
+    global peasantList,commandbar,qwer,sqwer,unitselect, back_frame,cursor,cardList,card_type,card_no
+
+    #시작 일꾼
     peasant = Peasant()
     peasantList.append(peasant)
 
-    back_frame = load_image('back_frame.png')
-    commandbar = load_image('Images\\commandbar.png')
+    #시작 카드 설정
+    init_cards()
+
+    back_frame = load_image('back.png')
+    #commandbar = load_image('Images\\commandbar2.png')
+    qwer = load_image('qwer.png')
+    sqwer = load_image('sqwer.png')
+    unitselect = load_image('unitselect.png')
     cursor = load_image('Images\\cursor.png')
 
 def exit():
-    global peasant,footman1,footman2,knight,cursor
+    global cursor,back_frame
 
-    del(peasant)
     del(back_frame)
     del(cursor)
 
@@ -51,9 +133,8 @@ def pause():
 def resume():
     pass
 
-
 def handle_events():
-    global mx,my,click,peasantList
+    global mx,my,click,unitselect,peasantList,Gold,selection,card_type,card_no
 
     events = get_events()
     for event in events:
@@ -64,23 +145,120 @@ def handle_events():
             my = 720 - event.y
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
-                pass
+                game_framework.quit()
             elif event.key == SDLK_p:
                 game_framework.push_state(pause_state)
-            elif event.key == SDLK_q:
-                peasant = Peasant()
-                peasantList.append(peasant)
 
-                pass
+            elif event.key == SDLK_q:
+                if selection == 0:
+                    selection = -1
+                else:
+                    selection= 0
+                    if Gold >= cardList[selection].cost:
+                        # 일꾼
+                        if cardList[selection].type == 0:
+                            peasant = Peasant()
+                            peasantList.append(peasant)
+                            change_card()
+                            selection = -1
+                        # 풋맨
+                        elif cardList[selection].type == 1:
+                            pass
+                        # 아처
+                        elif cardList[selection].type == 2:
+                            pass
+                        # 기사
+                        elif cardList[selection].type == 3:
+                            pass
+                        # 메이지
+                        elif cardList[selection].type == 4:
+                            pass
+                        # 공업
+                        elif cardList[selection].type == 5:
+                            pass
+                        # 방업
+                        elif cardList[selection].type == 6:
+                            pass
+                        # -
+                        elif cardList[selection].type == 7:
+                            pass
+
+
+
+
             elif event.key == SDLK_w:
-                pass
+                if selection == 1:
+                    selection = -1
+                else:
+                    selection = 1
+                    if Gold >= cardList[selection].cost:
+                        # 일꾼
+                        if cardList[selection].type == 0:
+                            peasant = Peasant()
+                            peasantList.append(peasant)
+                            change_card()
+                            selection = -1
+
+
+
+
             elif event.key == SDLK_e:
-                pass
+                if selection == 2:
+                    selection = -1
+                else:
+                    selection = 2
+                    if Gold >= cardList[selection].cost:
+                        # 일꾼
+                        if cardList[selection].type == 0:
+                            peasant = Peasant()
+                            peasantList.append(peasant)
+                            change_card()
+                            selection = -1
+
+
+
             elif event.key == SDLK_r:
-                pass
+                if selection == 3:
+                    selection = -1
+                else:
+                    selection = 3
+                    if Gold >= cardList[selection].cost:
+                        # 일꾼
+                        if cardList[selection].type == 0:
+                            peasant = Peasant()
+                            peasantList.append(peasant)
+                            change_card()
+                            selection = -1
+
+
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
                 click = True
+                if selection != -1:
+                    if cardList[selection].type == 1:
+                        unit = Footman()
+                        unitList.append(unit)
+                        change_card()
+                        selection = -1
+                    elif cardList[selection].type == 2:
+                        unit = Archer()
+                        unitList.append(unit)
+                        change_card()
+                        selection = -1
+                    elif cardList[selection].type == 3:
+                        unit = Knight()
+                        unitList.append(unit)
+                        change_card()
+                        selection = -1
+                    elif cardList[selection].type == 4:
+                        unit = Mage()
+                        unitList.append(unit)
+                        change_card()
+                        selection = -1
+
+                    pass
+
+
 
         elif event.type == SDL_MOUSEBUTTONUP:
             if event.button == SDL_BUTTON_LEFT:
@@ -90,20 +268,40 @@ def handle_events():
 
 def update():
    global timer
+
+   for unit in unitList:
+       unit.update()
+
    for peasant in peasantList:
        peasant.update()
 
    delay(0.1)
    timer += 1
 
+
 def draw_scene():
-    back_frame.draw(360, 360, 720, 720)
-    commandbar.draw(600,60 , 400, 120)
+
+    back_frame.draw(290, 340, 580, 680)
+    qwer.draw(60,250)
+    draw_number(Gold,90,580)
+
+    draw_cards()
+    #commandbar.draw(600,60 , 400, 150)
+
+    if selection > -1:
+        sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 450 - 100*selection)
+
+
+    for unit in unitList:
+        unit.draw()
 
     for peasant in peasantList:
         peasant.draw()
 
+    unit_build()
+
     # 커서는 최후방
+
     cursor.clip_draw(click * 50, 0, 50, 50, mx, my, 40, 40)
 
 
