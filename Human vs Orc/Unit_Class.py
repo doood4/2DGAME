@@ -1,8 +1,6 @@
 from pico2d import *
 import main_state
 
-
-
 #############  HUMAN  ###############
 
 class Peasant:
@@ -56,7 +54,7 @@ class Footman:
     def __init__(self):
         self.cost = 50
         self.x, self.y = main_state.mx, main_state.my
-        self.size = 40
+        self.size = 50
         self.xframe = 2
         self.yframe = 0
         self.vector = (0, 1)
@@ -98,7 +96,7 @@ class Archer:
     def __init__(self):
         self.cost = 50
         self.x, self.y = main_state.mx, main_state.my
-        self.size = 40
+        self.size = 50
         self.xframe = 2
         self.yframe = 0
         self.vector = (0, 1)
@@ -166,8 +164,8 @@ class Knight:
             self.xframe = 7
 
         self.yframe = (self.yframe + 1) % 4
-        self.x += self.vector[0] * 2
-        self.y += self.vector[1] * 2
+        self.x += self.vector[0] * 4
+        self.y += self.vector[1] * 4
 
 
     def draw(self):
@@ -181,7 +179,7 @@ class Mage:
     def __init__(self):
         self.cost = 50
         self.x, self.y = main_state.mx, main_state.my
-        self.size = 40
+        self.size = 50
         self.xframe = 2
         self.yframe = 0
         self.vector = (0, 1)
@@ -215,3 +213,24 @@ class Mage:
     def draw(self):
         self.image.clip_draw(self.xframe * 50, self.yframe * 50, 50, 50,
                              self.x, self.y,self.size,self.size)
+
+
+class human_Tower:
+    pass
+
+class human_Castle:
+    pass
+
+#############  ORC  ###############
+
+class Grunt:
+    pass
+
+class Troll:
+    pass
+
+class Ogre:
+    pass
+
+class Death_kinght:
+    pass

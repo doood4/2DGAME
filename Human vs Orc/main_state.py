@@ -12,7 +12,7 @@ name = "MainState"
 mx = 0
 my = 0
 ms = 0
-build = False
+build = True
 
 card_type = 0
 card_no = 0
@@ -36,7 +36,7 @@ unitselect = None
 peasantList= []
 unitList = []
 cardList = []
-numList =  [0,1,2,3,4]
+numList =  [0,1,2,3,4,5,6]
 
 map = None
 
@@ -84,9 +84,10 @@ def init_cards():
 
 # 카드 바꾸기
 def change_card():
-    global selection, cardList,numList, card_no,card_type
+    global selection, cardList,numList, card_no,card_type, Gold
 
     numList.append(cardList[selection].type)
+    Gold -= cardList[selection].cost
     cardList[selection].type = cardList[4].type
     del (cardList[4])
     x = random.randint(0, len(numList) - 1)
@@ -98,10 +99,15 @@ def change_card():
 
 # 유닛 빌드여부
 def unit_build():
-    global mx,my,selection, cardList, unitselect
+    global mx,my,selection, cardList, unitselect, build,Gold
+
+    if mx > 150 and mx < 530 and my < 300 and my > 50 and Gold >= cardList[selection].cost:
+        build = True
+    else:
+        build = False
 
     if selection != -1:
-        unitselect.clip_draw(50 * (cardList[selection].type - 1), 0, 50, 50, mx, my,40,40)
+        unitselect.clip_draw(50 * (cardList[selection].type - 1), 50 - 50*build, 50, 50, mx, my,40,40)
 
 
 def enter():
@@ -134,7 +140,7 @@ def resume():
     pass
 
 def handle_events():
-    global mx,my,click,unitselect,peasantList,Gold,selection,card_type,card_no
+    global mx,my,click,unitselect,build,peasantList,Gold,ATK,DEF,selection,card_type,card_no
 
     events = get_events()
     for event in events:
@@ -161,30 +167,21 @@ def handle_events():
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-                        # 풋맨
-                        elif cardList[selection].type == 1:
-                            pass
-                        # 아처
-                        elif cardList[selection].type == 2:
-                            pass
-                        # 기사
-                        elif cardList[selection].type == 3:
-                            pass
-                        # 메이지
-                        elif cardList[selection].type == 4:
-                            pass
                         # 공업
                         elif cardList[selection].type == 5:
+                            ATK += 1
+                            change_card()
+                            selection = -1
                             pass
                         # 방업
                         elif cardList[selection].type == 6:
+                            DEF += 1
+                            change_card()
+                            selection = -1
                             pass
                         # -
                         elif cardList[selection].type == 7:
                             pass
-
-
-
 
             elif event.key == SDLK_w:
                 if selection == 1:
@@ -198,9 +195,18 @@ def handle_events():
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-
-
-
+                        # 공업
+                        elif cardList[selection].type == 5:
+                            ATK += 1
+                            change_card()
+                            selection = -1
+                            pass
+                        # 방업
+                        elif cardList[selection].type == 6:
+                            DEF += 1
+                            change_card()
+                            selection = -1
+                            pass
 
             elif event.key == SDLK_e:
                 if selection == 2:
@@ -214,8 +220,18 @@ def handle_events():
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-
-
+                        # 공업
+                        elif cardList[selection].type == 5:
+                            ATK += 1
+                            change_card()
+                            selection = -1
+                            pass
+                        # 방업
+                        elif cardList[selection].type == 6:
+                            DEF += 1
+                            change_card()
+                            selection = -1
+                            pass
 
             elif event.key == SDLK_r:
                 if selection == 3:
@@ -229,12 +245,23 @@ def handle_events():
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-
+                        # 공업
+                        elif cardList[selection].type == 5:
+                            ATK += 1
+                            change_card()
+                            selection = -1
+                            pass
+                        # 방업
+                        elif cardList[selection].type == 6:
+                            DEF += 1
+                            change_card()
+                            selection = -1
+                            pass
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
                 click = True
-                if selection != -1:
+                if selection != -1 and build == True:
                     if cardList[selection].type == 1:
                         unit = Footman()
                         unitList.append(unit)
@@ -284,6 +311,8 @@ def draw_scene():
     back_frame.draw(290, 340, 580, 680)
     qwer.draw(60,250)
     draw_number(Gold,90,580)
+    draw_number(ATK,90,550)
+    draw_number(DEF,90,520)
 
     draw_cards()
     #commandbar.draw(600,60 , 400, 150)
