@@ -17,7 +17,7 @@ build = True
 card_type = 0
 card_no = 0
 
-Gold = 200
+Gold = 5050
 ATK = 0
 DEF = 0
 
