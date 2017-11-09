@@ -9,6 +9,8 @@ import pause_state
 
 name = "MainState"
 
+
+
 mx = 0
 my = 0
 ms = 0
@@ -33,6 +35,10 @@ sqwer = None
 numbers = None
 unitselect = None
 
+orc_tower1 = None
+
+
+enemyList = []
 peasantList= []
 unitList = []
 cardList = []
@@ -109,13 +115,51 @@ def unit_build():
     if selection != -1:
         unitselect.clip_draw(50 * (cardList[selection].type - 1), 50 - 50*build, 50, 50, mx, my,40,40)
 
+def get_frame_time():
+
+    global current_time
+
+    frame_time = get_time() - current_time
+    current_time += frame_time
+    return frame_time
+
+def collide(a, b):
+    # fill here
+    left_a,bottom_a,right_a,top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return  False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return  False
+    if bottom_a > top_b: return  False
+
+    return True
+
+def range_collide(a, b):
+    # fill here
+    left_a,bottom_a,right_a,top_a = a.get_rb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return  False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return  False
+    if bottom_a > top_b: return  False
+
+    return True
 
 def enter():
-    global peasantList,commandbar,qwer,sqwer,unitselect, back_frame,cursor,cardList,card_type,card_no
+    global peasantList,commandbar,qwer,sqwer,unitselect, back_frame,cursor,cardList,card_type,card_no,\
+        orc_tower1, enemyList
+
+    grunt = Grunt()
+    enemyList.append(grunt)
 
     #시작 일꾼
     peasant = Peasant()
     peasantList.append(peasant)
+
+    #시작 건물 배치
+    orc_tower1 = orc_Tower()
 
     #시작 카드 설정
     init_cards()
@@ -139,7 +183,7 @@ def pause():
 def resume():
     pass
 
-def handle_events():
+def handle_events(frame_time):
     global mx,my,click,unitselect,build,peasantList,Gold,ATK,DEF,selection,card_type,card_no
 
     events = get_events()
@@ -283,27 +327,43 @@ def handle_events():
                         change_card()
                         selection = -1
 
-                    pass
-
-
 
         elif event.type == SDL_MOUSEBUTTONUP:
             if event.button == SDL_BUTTON_LEFT:
                 click = False
 
 
+def update(frame_time):
 
-def update():
-   global timer
+   for enemy in enemyList:
+        enemy.update(frame_time)
 
    for unit in unitList:
-       unit.update()
+       unit.update(frame_time)
+
+   for unit in unitList:
+       for enemy in enemyList:
+            if collide(enemy, unit):
+                unit.motion = 4
+                enemy.motion = 4
+                if unit.frame == 4:
+                    enemy.hp -= unit.atk
+                    if enemy.hp < 0:
+                        enemyList.remove(enemy)
+                        unit.motion = 0
+                        new = Grunt()
+                        enemyList.append(new)
+
+                if enemy.frame == 4:
+                    unit.hp -= enemy.atk
+                    if unit.hp < 0:
+                        unitList.remove(unit)
+                        enemy.motion = 0
+
+
 
    for peasant in peasantList:
-       peasant.update()
-
-   delay(0.1)
-   timer += 1
+       peasant.update(frame_time)
 
 
 def draw_scene():
@@ -320,21 +380,32 @@ def draw_scene():
     if selection > -1:
         sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 450 - 100*selection)
 
+    for enemy in enemyList:
+        enemy.draw()
+        enemy.draw_bb()
+        enemy.draw_rb()
 
     for unit in unitList:
         unit.draw()
+        unit.draw_bb()
+        unit.draw_rb()
 
     for peasant in peasantList:
         peasant.draw()
 
+    orc_tower1.draw()
+    orc_tower1.draw_bb()
+    orc_tower1.draw_rb()
+
     unit_build()
+
 
     # 커서는 최후방
 
     cursor.clip_draw(click * 50, 0, 50, 50, mx, my, 40, 40)
 
 
-def draw():
+def draw(frame_time):
     clear_canvas()
     draw_scene()
     update_canvas()
