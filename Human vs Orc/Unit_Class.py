@@ -96,6 +96,9 @@ class Footman:
 
 
     def update(self,frame_time):
+        if self.hp < 0 :
+            main_state.unitList.remove(self)
+
         if self.vector == (0,1):
             self.state = 0
         elif self.vector == (1,1):
@@ -112,6 +115,15 @@ class Footman:
             self.state = 6
         elif self.vector == (-1,1):
             self.state = 7
+
+        for enemy in main_state.enemyList:
+            if main_state.collide(enemy, self):
+                self.motion = 4
+                if self.frame == 4:
+                    enemy.hp -= self.atk
+            else:
+                self.motion = 0
+
 
         self.life_time += frame_time
         distance = Footman.RUN_SPEED_PPS * frame_time
@@ -430,6 +442,9 @@ class Grunt:
             Grunt.life_box = load_image('Images\\life.png')
 
     def update(self, frame_time):
+        if self.hp < 0 :
+            main_state.enemyList.remove(self)
+
         if self.vector == (0, 1):
             self.state = 0
         elif self.vector == (1, 1):
@@ -446,6 +461,14 @@ class Grunt:
             self.state = 6
         elif self.vector == (-1, 1):
             self.state = 7
+
+        for unit in main_state.unitList:
+            if main_state.collide(unit, self):
+                self.motion = 4
+                if self.frame == 4:
+                    unit.hp -= self.atk
+            else:
+                self.motion = 0
 
         self.life_time += frame_time
         distance = Grunt.RUN_SPEED_PPS * frame_time

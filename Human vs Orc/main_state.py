@@ -6,10 +6,7 @@ import game_framework
 import title_state
 import pause_state
 
-
 name = "MainState"
-
-
 
 mx = 0
 my = 0
@@ -72,9 +69,9 @@ def draw_cards():
     global cardList
     #current
     for i in range(4):
-        cardList[i].image.clip_draw(cardList[i].type * 60, 0, 60,80,70,450 - cardList[i].no*100)
+        cardList[i].image.clip_draw(cardList[i].type * 60, 0, 60,80,70,350 - cardList[i].no*100)
     #next
-    cardList[4].image.clip_draw(cardList[4].type*60,0,60,80,60,40, 40,60)
+    cardList[4].image.clip_draw(cardList[4].type*60,0,60,80,70,440,40,60)
 
 # 카드 초기 설정
 def init_cards():
@@ -341,24 +338,6 @@ def update(frame_time):
    for unit in unitList:
        unit.update(frame_time)
 
-   for unit in unitList:
-       for enemy in enemyList:
-            if collide(enemy, unit):
-                unit.motion = 4
-                enemy.motion = 4
-                if unit.frame == 4:
-                    enemy.hp -= unit.atk
-                    if enemy.hp < 0:
-                        enemyList.remove(enemy)
-                        unit.motion = 0
-                        new = Grunt()
-                        enemyList.append(new)
-
-                if enemy.frame == 4:
-                    unit.hp -= enemy.atk
-                    if unit.hp < 0:
-                        unitList.remove(unit)
-                        enemy.motion = 0
 
 
 
@@ -378,7 +357,7 @@ def draw_scene():
     #commandbar.draw(600,60 , 400, 150)
 
     if selection > -1:
-        sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 450 - 100*selection)
+        sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 350 - 100*selection)
 
     for enemy in enemyList:
         enemy.draw()
