@@ -8,6 +8,8 @@ import pause_state
 
 name = "MainState"
 
+current_time = 0.0
+
 mx = 0
 my = 0
 ms = 0
@@ -16,6 +18,7 @@ build = True
 card_type = 0
 card_no = 0
 
+TIME = 0
 Gold = 5050
 ATK = 0
 DEF = 0
@@ -32,18 +35,20 @@ sqwer = None
 numbers = None
 unitselect = None
 
-orc_tower1 = None
-
-
 enemyList = []
 peasantList= []
 unitList = []
+arrowList = []
 cardList = []
 numList =  [0,1,2,3,4,5,6]
 
 map = None
 
 timer = 0
+
+def TIMER():
+    global TIME
+    TIME = int(get_time())
 
 # 숫자그리는 함수(변수,좌표)
 def draw_number(A,x,y):
@@ -132,9 +137,9 @@ def collide(a, b):
 
     return True
 
-def range_collide(a, b):
+def range_collide(ra, b):
     # fill here
-    left_a,bottom_a,right_a,top_a = a.get_rb()
+    left_a,bottom_a,right_a,top_a = ra.get_rb()
     left_b, bottom_b, right_b, top_b = b.get_bb()
 
     if left_a > right_b: return  False
@@ -146,7 +151,7 @@ def range_collide(a, b):
 
 def enter():
     global peasantList,commandbar,qwer,sqwer,unitselect, back_frame,cursor,cardList,card_type,card_no,\
-        orc_tower1, enemyList
+        enemyList
 
     grunt = Grunt()
     enemyList.append(grunt)
@@ -156,7 +161,15 @@ def enter():
     peasantList.append(peasant)
 
     #시작 건물 배치
-    orc_tower1 = orc_Tower()
+    tower1 = orc_Tower1()
+    tower2 = orc_Tower2()
+    enemyList.append(tower1)
+    enemyList.append(tower2)
+
+    tower1 = human_Tower1()
+    tower2 = human_Tower2()
+    unitList.append(tower1)
+    unitList.append(tower2)
 
     #시작 카드 설정
     init_cards()
@@ -331,6 +344,11 @@ def handle_events(frame_time):
 
 
 def update(frame_time):
+   TIMER()
+
+   if TIME % 5 == 0 and get_time() - TIME > 0.01 and get_time() - TIME < 0.03:
+        grunt = Grunt()
+        enemyList.append(grunt)
 
    for enemy in enemyList:
         enemy.update(frame_time)
@@ -338,17 +356,19 @@ def update(frame_time):
    for unit in unitList:
        unit.update(frame_time)
 
-
-
+   for arrow in arrowList:
+        arrow.update(frame_time)
 
    for peasant in peasantList:
        peasant.update(frame_time)
+
 
 
 def draw_scene():
 
     back_frame.draw(290, 340, 580, 680)
     qwer.draw(60,250)
+    draw_number(TIME, 80, 650)
     draw_number(Gold,90,580)
     draw_number(ATK,90,550)
     draw_number(DEF,90,520)
@@ -369,15 +389,13 @@ def draw_scene():
         unit.draw_bb()
         unit.draw_rb()
 
+    for arrow in arrowList:
+        arrow.draw()
+
     for peasant in peasantList:
         peasant.draw()
 
-    orc_tower1.draw()
-    orc_tower1.draw_bb()
-    orc_tower1.draw_rb()
-
     unit_build()
-
 
     # 커서는 최후방
 
