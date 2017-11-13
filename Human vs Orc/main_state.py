@@ -251,7 +251,6 @@ def handle_events(frame_time):
                             change_card()
                             selection = -1
 
-
             elif event.key == SDLK_e:
                 if selection == 2:
                     selection = -1
@@ -265,7 +264,6 @@ def handle_events(frame_time):
                             change_card()
                             selection = -1
 
-
             elif event.key == SDLK_r:
                 if selection == 3:
                     selection = -1
@@ -278,7 +276,6 @@ def handle_events(frame_time):
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
@@ -345,19 +342,18 @@ def draw_scene():
 
     draw_cards()
 
-
     if selection > -1:
         sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 350 - 100*selection)
 
-    for enemy in enemyList:
-        enemy.draw()
-        enemy.draw_bb()
-        enemy.draw_rb()
+    for i in range(len(enemyList)):
+        enemyList[-i].draw()
+        #enemyList[-i].draw_bb()
+        #enemyList[-i].draw_rb()
 
     for unit in unitList:
         unit.draw()
-        unit.draw_bb()
-        unit.draw_rb()
+        #unit.draw_bb()
+        #unit.draw_rb()
 
     for building in buildingList:
         building.draw()
