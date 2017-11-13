@@ -38,9 +38,9 @@ unitselect = None
 enemyList = []
 peasantList= []
 unitList = []
-arrowList = []
+buildingList= []
 cardList = []
-numList =  [0,1,2,3,4,5,6]
+numList = [0,1,2,3,4]
 
 map = None
 
@@ -149,6 +149,12 @@ def range_collide(ra, b):
 
     return True
 
+def create_world():
+    pass
+
+def destroy_world():
+    pass
+
 def enter():
     global peasantList,commandbar,qwer,sqwer,unitselect, back_frame,cursor,cardList,card_type,card_no,\
         enemyList
@@ -166,10 +172,13 @@ def enter():
     enemyList.append(tower1)
     enemyList.append(tower2)
 
+
     tower1 = human_Tower1()
     tower2 = human_Tower2()
     unitList.append(tower1)
     unitList.append(tower2)
+    buildingList.append(tower1)
+    buildingList.append(tower2)
 
     #시작 카드 설정
     init_cards()
@@ -356,8 +365,6 @@ def update(frame_time):
    for unit in unitList:
        unit.update(frame_time)
 
-   for arrow in arrowList:
-        arrow.update(frame_time)
 
    for peasant in peasantList:
        peasant.update(frame_time)
@@ -389,8 +396,9 @@ def draw_scene():
         unit.draw_bb()
         unit.draw_rb()
 
-    for arrow in arrowList:
-        arrow.draw()
+    for building in buildingList:
+        building.draw()
+
 
     for peasant in peasantList:
         peasant.draw()

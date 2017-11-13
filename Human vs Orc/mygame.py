@@ -3,7 +3,7 @@ import game_framework
 import start_state
 import main_state
 
-# fill here
+
 open_canvas(580,680,sync=True)
 hide_cursor()
 
