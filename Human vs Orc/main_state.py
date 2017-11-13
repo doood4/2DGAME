@@ -19,9 +19,9 @@ card_type = 0
 card_no = 0
 
 TIME = 0
-Gold = 5050
-ATK = 0
-DEF = 0
+Gold = 120
+Human_Score = 0
+Orc_Score = 0
 
 selection = -1
 
@@ -106,10 +106,10 @@ def change_card():
     numList.remove(card_type)
 
 # 유닛 빌드여부
-def unit_build():
+def unit_build():##
     global mx,my,selection, cardList, unitselect, build,Gold
 
-    if mx > 150 and mx < 530 and my < 300 and my > 50 and Gold >= cardList[selection].cost:
+    if mx > 150 and mx < 530 and my < 300 and my > 120 and Gold >= cardList[selection].cost:
         build = True
     else:
         build = False
@@ -150,28 +150,24 @@ def range_collide(ra, b):
     return True
 
 def create_world():
-    pass
-
-def destroy_world():
-    pass
-
-def enter():
-    global peasantList,commandbar,qwer,sqwer,unitselect, back_frame,cursor,cardList,card_type,card_no,\
+    global peasantList, commandbar, qwer, sqwer, unitselect, back_frame, cursor, cardList, card_type, card_no, \
         enemyList
 
-    grunt = Grunt()
-    enemyList.append(grunt)
-
-    #시작 일꾼
+    # 시작 일꾼
     peasant = Peasant()
     peasantList.append(peasant)
 
-    #시작 건물 배치
+    # 시작 건물 배치
     tower1 = orc_Tower1()
     tower2 = orc_Tower2()
     enemyList.append(tower1)
     enemyList.append(tower2)
 
+    castle = orc_Castle()
+    enemyList.append(castle)
+    castle = human_Castle()
+    unitList.append(castle)
+    buildingList.append(castle)
 
     tower1 = human_Tower1()
     tower2 = human_Tower2()
@@ -180,21 +176,31 @@ def enter():
     buildingList.append(tower1)
     buildingList.append(tower2)
 
-    #시작 카드 설정
+    # 시작 카드 설정
     init_cards()
 
     back_frame = load_image('back.png')
-    #commandbar = load_image('Images\\commandbar2.png')
+    commandbar = load_image('commandbar_frame.png')
     qwer = load_image('qwer.png')
     sqwer = load_image('sqwer.png')
     unitselect = load_image('unitselect.png')
     cursor = load_image('Images\\cursor.png')
 
-def exit():
-    global cursor,back_frame
 
-    del(back_frame)
-    del(cursor)
+def destroy_world():
+    global cursor, back_frame
+
+    del (back_frame)
+    del (cursor)
+
+
+def enter():
+    create_world()
+
+
+def exit():
+    destroy_world()
+
 
 def pause():
     pass
@@ -230,21 +236,7 @@ def handle_events(frame_time):
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-                        # 공업
-                        elif cardList[selection].type == 5:
-                            ATK += 1
-                            change_card()
-                            selection = -1
-                            pass
-                        # 방업
-                        elif cardList[selection].type == 6:
-                            DEF += 1
-                            change_card()
-                            selection = -1
-                            pass
-                        # -
-                        elif cardList[selection].type == 7:
-                            pass
+
 
             elif event.key == SDLK_w:
                 if selection == 1:
@@ -258,18 +250,7 @@ def handle_events(frame_time):
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-                        # 공업
-                        elif cardList[selection].type == 5:
-                            ATK += 1
-                            change_card()
-                            selection = -1
-                            pass
-                        # 방업
-                        elif cardList[selection].type == 6:
-                            DEF += 1
-                            change_card()
-                            selection = -1
-                            pass
+
 
             elif event.key == SDLK_e:
                 if selection == 2:
@@ -283,18 +264,7 @@ def handle_events(frame_time):
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-                        # 공업
-                        elif cardList[selection].type == 5:
-                            ATK += 1
-                            change_card()
-                            selection = -1
-                            pass
-                        # 방업
-                        elif cardList[selection].type == 6:
-                            DEF += 1
-                            change_card()
-                            selection = -1
-                            pass
+
 
             elif event.key == SDLK_r:
                 if selection == 3:
@@ -308,18 +278,7 @@ def handle_events(frame_time):
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-                        # 공업
-                        elif cardList[selection].type == 5:
-                            ATK += 1
-                            change_card()
-                            selection = -1
-                            pass
-                        # 방업
-                        elif cardList[selection].type == 6:
-                            DEF += 1
-                            change_card()
-                            selection = -1
-                            pass
+
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
@@ -358,6 +317,8 @@ def update(frame_time):
    if TIME % 5 == 0 and get_time() - TIME > 0.01 and get_time() - TIME < 0.03:
         grunt = Grunt()
         enemyList.append(grunt)
+        ogre = Ogre()
+        enemyList.append(ogre)
 
    for enemy in enemyList:
         enemy.update(frame_time)
@@ -374,14 +335,16 @@ def update(frame_time):
 def draw_scene():
 
     back_frame.draw(290, 340, 580, 680)
+    commandbar.draw(60, 340, 120, 680)
     qwer.draw(60,250)
-    draw_number(TIME, 80, 650)
-    draw_number(Gold,90,580)
-    draw_number(ATK,90,550)
-    draw_number(DEF,90,520)
+    draw_number(TIME, 80, 630)
+
+    draw_number(Human_Score, 90, 580)
+    draw_number(Orc_Score, 90, 550)
+    draw_number(Gold, 90, 520)
 
     draw_cards()
-    #commandbar.draw(600,60 , 400, 150)
+
 
     if selection > -1:
         sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 350 - 100*selection)
@@ -398,7 +361,6 @@ def draw_scene():
 
     for building in buildingList:
         building.draw()
-
 
     for peasant in peasantList:
         peasant.draw()

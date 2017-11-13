@@ -6,7 +6,7 @@ class Card:
     def __init__(self):
         self.type = main_state.card_type
         self.no = main_state.card_no
-        self.cost = 50
+        self.cost = 20
         self.xsize = 60
         self.ysize = 80
 
