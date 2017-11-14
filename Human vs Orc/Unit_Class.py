@@ -5,12 +5,10 @@ import main_state
 #############  HUMAN  ###############
 
 class Peasant:
-
     image = None
-    plus10 = None
 
     PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
-    RUN_SPEED_KMPH = 20.0  # Km/h
+    RUN_SPEED_KMPH = 10.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -30,8 +28,6 @@ class Peasant:
 
         if Peasant.image == None:
             Peasant.image = self.image = load_image('Images\\human_peasant.png')
-        if Peasant.plus10 == None:
-            Peasant.plus10 = self.plus10 = load_image('plus10.png')
 
     def update(self,frame_time):
         if self.vector == (1,0):
@@ -57,7 +53,6 @@ class Peasant:
         self.image.clip_draw(self.state * 50, self.frame * 50, 50, 50,
                              self.x, self.y,self.size,self.size)
         if self.x < 390:
-            #self.plus10.draw(self.x, self.y + 50)
             main_state.Gold += 5
 
 class Footman:
@@ -93,7 +88,6 @@ class Footman:
         if Footman.life_box == None:
             Footman.life_box = load_image('Images\\human_life.png')
 
-
     def update(self,frame_time):
         # 죽음
         if self.hp < 0:
@@ -107,32 +101,8 @@ class Footman:
             # 자동 이동 목표
             for enemy in main_state.enemyList:
                 if not main_state.range_collide(self, enemy):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
+                    self.x_vector = 0
+                    self.y_vector = 1
                     if self.y > 500 and self.x < 350:
                         self.x_vector = 1
                     elif self.y > 500 and self.x >= 350:
@@ -236,7 +206,7 @@ class Footman:
 
     # 사거리
     def get_rb(self):
-        return self.x - 60, self.y - 60, self.x + 60, self.y + 60
+        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
 
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
@@ -295,32 +265,8 @@ class Archer:
             # 자동 이동 목표
             for enemy in main_state.enemyList:
                 if not main_state.range_collide(self, enemy):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
+                    self.x_vector = 0
+                    self.y_vector = 1
                     if self.y > 500 and self.x < 350:
                         self.x_vector = 1
                     elif self.y > 500 and self.x >= 350:
@@ -482,7 +428,7 @@ class Knight:
         self.y_vector = 1
 
         self.hp = 20
-        self.atk = 0.2
+        self.atk = 0.1
 
         if Knight.image == None:
             Knight.image = load_image('Images\\human_knight.png')
@@ -499,34 +445,11 @@ class Knight:
             self.motion = 0
         # 살음
         elif self.hp > 0:
+            # 자동 이동
             for enemy in main_state.enemyList:
                 if not main_state.range_collide(self, enemy):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
+                    self.x_vector = 0
+                    self.y_vector = 1
                     if self.y > 500 and self.x < 350:
                         self.x_vector = 1
                     elif self.y > 500 and self.x >= 350:
@@ -630,7 +553,7 @@ class Knight:
 
     # 사거리
     def get_rb(self):
-        return self.x - 60, self.y - 60, self.x + 60, self.y + 60
+        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
 
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
@@ -689,32 +612,8 @@ class Mage:
             # 자동 이동 목표
             for enemy in main_state.enemyList:
                 if not main_state.range_collide(self, enemy):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = 1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = 1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = 1
-
+                    self.x_vector = 0
+                    self.y_vector = 1
                     if self.y > 500 and self.x < 350:
                         self.x_vector = 1
                     elif self.y > 500 and self.x >= 350:
@@ -1043,7 +942,7 @@ class Grunt:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(400, 500), random.randint(400, 500)
+        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
         self.size = 100
         self.state = 4
         self.frame = 0
@@ -1076,32 +975,9 @@ class Grunt:
         elif self.hp > 0:
             # 자동 이동 목표
             for unit in main_state.unitList:
-                if not main_state.agro_collide(self, unit):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-
+                if not main_state.range_collide(self, unit):
+                    self.x_vector = 0
+                    self.y_vector = -1
                     if self.y < 150 and self.x < 350:
                         self.x_vector = 1
                     elif self.y < 150 and self.x >= 350:
@@ -1204,7 +1080,7 @@ class Grunt:
 
     # 사거리
     def get_rb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
 
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
@@ -1226,7 +1102,7 @@ class Troll:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(150, 330), random.randint(400, 500)
+        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
         self.size = 100
         self.state = 4
         self.frame = 0
@@ -1266,31 +1142,8 @@ class Troll:
             # 자동 이동 목표
             for unit in main_state.unitList:
                 if not main_state.range_collide(self, unit):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-
+                    self.x_vector = 0
+                    self.y_vector = -1
                     if self.y < 150 and self.x < 350:
                         self.x_vector = 1
                     elif self.y < 150 and self.x >= 350:
@@ -1419,7 +1272,7 @@ class Ogre:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(300, 400), random.randint(400, 500)
+        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
         self.size = 100
         self.state = 4
         self.frame = 0
@@ -1452,32 +1305,9 @@ class Ogre:
         elif self.hp > 0:
             # 자동 이동 목표
             for unit in main_state.unitList:
-                if not main_state.agro_collide(self, unit):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-
+                if not main_state.range_collide(self, unit):
+                    self.x_vector = 0
+                    self.y_vector = -1
                     if self.y < 150 and self.x < 350:
                         self.x_vector = 1
                     elif self.y < 150 and self.x >= 350:
@@ -1485,7 +1315,7 @@ class Ogre:
 
             # 공격하러 이동
             for unit in main_state.unitList:
-                if main_state.agro_collide(self, unit):
+                if main_state.range_collide(self, unit):
                     if self.x > unit.x + 20:
                         self.x_vector = -1
                         if self.y > unit.y + 20:
@@ -1580,7 +1410,7 @@ class Ogre:
 
     # 사거리
     def get_rb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
 
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
@@ -1593,7 +1423,7 @@ class Death_kinght:
     atk2 = None
 
     PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
-    RUN_SPEED_KMPH = 10.0  # Km/h
+    RUN_SPEED_KMPH = 8.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -1603,7 +1433,7 @@ class Death_kinght:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(150, 550), random.randint(400, 500)
+        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
         self.size = 100
         self.state = 4
         self.frame = 0
@@ -1645,31 +1475,8 @@ class Death_kinght:
             # 자동 이동 목표
             for unit in main_state.unitList:
                 if not main_state.range_collide(self, unit):
-                    if self.x < 350:
-                        if self.x > 240:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 220:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-                    else:
-                        if self.x > 460:
-                            self.x_vector = -1
-                            self.y_vector = -1
-
-                        elif self.x < 440:
-                            self.x_vector = 1
-                            self.y_vector = -1
-
-                        else:
-                            self.x_vector = 0
-                            self.y_vector = -1
-
+                    self.x_vector = 0
+                    self.y_vector = -1
                     if self.y < 150 and self.x < 350:
                         self.x_vector = 1
                     elif self.y < 150 and self.x >= 350:

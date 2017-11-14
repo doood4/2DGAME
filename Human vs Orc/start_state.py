@@ -9,11 +9,11 @@ def enter(): pass
 
 def exit(): pass
 
-def update(): pass
+def update(frame_time): pass
 
-def draw(): pass
+def draw(frame_time): pass
 
-def handle_events(): pass
+def handle_events(frame_time): pass
 
 def pause(): pass
 

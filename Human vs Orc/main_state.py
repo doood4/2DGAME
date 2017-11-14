@@ -2,32 +2,39 @@ from pico2d import *
 import random
 from Unit_Class import *
 from Object_Class import *
+from Ai import *
 import game_framework
 import title_state
 import pause_state
+import result_state
 
 name = "MainState"
 
+# 시간 상수
 current_time = 0.0
+TIME = 0
+timer = 0
 
+# 마우스 상수
 mx = 0
 my = 0
 ms = 0
+click = False
 build = True
 
+# 카드 설정 상수
 card_type = 0
 card_no = 0
 
-TIME = 0
+# 게임 변수
 Gold = 120
 Human_Score = 0
 Orc_Score = 0
-
 selection = -1
 
+# 이미지
 cursor = None
-click = False
-
+map = None
 back_frame = None
 commandbar = None
 qwer = None
@@ -35,16 +42,14 @@ sqwer = None
 numbers = None
 unitselect = None
 
+######### 리스트 #######
 enemyList = []
 peasantList= []
 unitList = []
 buildingList= []
 cardList = []
-numList = [0,1,2,3,4]
-
-map = None
-
-timer = 0
+numList = [0, 1, 2, 3, 4]
+########################
 
 def TIMER():
     global TIME
@@ -106,15 +111,15 @@ def change_card():
     numList.remove(card_type)
 
 # 유닛 빌드여부
-def unit_build():##
-    global mx,my,selection, cardList, unitselect, build,Gold
+def unit_build():
+    global mx, my, selection, cardList, unitselect, build, Gold
 
     if mx > 150 and mx < 530 and my < 300 and my > 120 and Gold >= cardList[selection].cost:
         build = True
     else:
         build = False
 
-    if selection != -1:
+    if selection != -1 and mx > 130 :
         unitselect.clip_draw(50 * (cardList[selection].type - 1), 50 - 50*build, 50, 50, mx, my,40,40)
 
 def get_frame_time():
@@ -220,7 +225,7 @@ def resume():
     pass
 
 def handle_events(frame_time):
-    global mx,my,click,unitselect,build,peasantList,Gold,ATK,DEF,selection,card_type,card_no
+    global mx,my,click,unitselect,build,peasantList,Gold,selection,card_type,card_no
 
     events = get_events()
     for event in events:
@@ -247,7 +252,6 @@ def handle_events(frame_time):
                             peasantList.append(peasant)
                             change_card()
                             selection = -1
-
 
             elif event.key == SDLK_w:
                 if selection == 1:
@@ -291,7 +295,60 @@ def handle_events(frame_time):
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
                 click = True
-                if selection != -1 and build == True:
+                # q클릭
+                if mx > 40 and mx < 100 and my > 310 and my < 390:
+                    if selection == 0:
+                        selection = -1
+                    else:
+                        selection = 0
+                        if Gold >= cardList[selection].cost:
+                            # 일꾼
+                            if cardList[selection].type == 0:
+                                peasant = Peasant()
+                                peasantList.append(peasant)
+                                change_card()
+                                selection = -1
+                # w클릭
+                if mx > 40 and mx < 100 and my > 210 and my < 290:
+                    if selection == 1:
+                        selection = -1
+                    else:
+                        selection = 1
+                        if Gold >= cardList[selection].cost:
+                            # 일꾼
+                            if cardList[selection].type == 0:
+                                peasant = Peasant()
+                                peasantList.append(peasant)
+                                change_card()
+                                selection = -1
+                # e클릭
+                if mx > 40 and mx < 100 and my > 110 and my < 190:
+                    if selection == 2:
+                        selection = -1
+                    else:
+                        selection = 2
+                        if Gold >= cardList[selection].cost:
+                            # 일꾼
+                            if cardList[selection].type == 0:
+                                peasant = Peasant()
+                                peasantList.append(peasant)
+                                change_card()
+                                selection = -1
+                # r클릭
+                if mx > 40 and mx < 100 and my > 10 and my <90:
+                    if selection == 3:
+                        selection = -1
+                    else:
+                        selection = 3
+                        if Gold >= cardList[selection].cost:
+                            # 일꾼
+                            if cardList[selection].type == 0:
+                                peasant = Peasant()
+                                peasantList.append(peasant)
+                                change_card()
+                                selection = -1
+                # 유닛 소환
+                if selection != -1 and build is True:
                     if cardList[selection].type == 1:
                         unit = Footman()
                         unitList.append(unit)
@@ -313,32 +370,31 @@ def handle_events(frame_time):
                         change_card()
                         selection = -1
 
-
         elif event.type == SDL_MOUSEBUTTONUP:
             if event.button == SDL_BUTTON_LEFT:
                 click = False
 
 
 def update(frame_time):
-   TIMER()
+    if Human_Score == 3 or Orc_Score == 3:
+        game_framework.push_state(result_state)
 
-   if TIME % 5 == 0 and get_time() - TIME > 0.01 and get_time() - TIME < 0.03:
-        grunt = Grunt()
-        enemyList.append(grunt)
-        troll = Troll()#
-        enemyList.append(troll)
-        ogre = Ogre()
-        enemyList.append(ogre)
-        death = Death_kinght()
-        enemyList.append(death)
+    # 시간 체크
+    TIMER()
 
-   for enemy in enemyList:
+    # 컴퓨터 Ai
+    Ai()
+
+    # 적
+    for enemy in enemyList:
         enemy.update(frame_time)
 
-   for unit in unitList:
+    # 아군
+    for unit in unitList:
        unit.update(frame_time)
 
-   for peasant in peasantList:
+    # 일꾼
+    for peasant in peasantList:
        peasant.update(frame_time)
 
 
@@ -347,42 +403,53 @@ def draw_scene():
     back_frame.draw(290, 340, 580, 680)
     commandbar.draw(60, 340, 120, 680)
     qwer.draw(60,250)
-    draw_number(TIME, 80, 630)
+    # 타이머
+    draw_number(int((180 - TIME) / 60), 50, 630)
+    draw_number(int(180 - TIME) % 60, 80, 630)
+    #draw_number(TIME, 80, 630)
 
+    # 휴먼 점수
     draw_number(Human_Score, 90, 580)
+    # 오크 점수
     draw_number(Orc_Score, 90, 550)
+    # 글로벌 골드
     draw_number(Gold, 90, 520)
 
+    # 카드 그리기
     draw_cards()
 
     if selection > -1:
-        sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 350 - 100*selection)
+        sqwer.clip_draw(0, 300 - 100*selection, 120, 100, 60, 350 - 100*selection)
 
     #for enemy in enemyList:
     #    enemy.draw()
     #    enemy.draw_bb()
     #    enemy.draw_rb()
 
+    # 적 뒤에서 부터 그리기
     for i in range(len(enemyList)):
         enemyList[-i].draw()
-        #enemyList[-i].draw_bb()
-        #enemyList[-i].draw_rb()
+        enemyList[-i].draw_bb()
+        enemyList[-i].draw_rb()
 
+    # 아군 그리기
     for unit in unitList:
         unit.draw()
-        #unit.draw_bb()
-        #unit.draw_rb()
+        unit.draw_bb()
+        unit.draw_rb()
 
+    # 아군 건물 그리기
     for building in buildingList:
         building.draw()
 
+    # 일꾼 그리기
     for peasant in peasantList:
         peasant.draw()
 
+    # 빌드여부 그리기기
     unit_build()
 
     # 커서는 최후방
-
     cursor.clip_draw(click * 50, 0, 50, 50, mx, my, 40, 40)
 
 
