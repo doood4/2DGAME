@@ -138,7 +138,6 @@ def collide(a, b):
     return True
 
 def range_collide(ra, b):
-    # fill here
     left_a,bottom_a,right_a,top_a = ra.get_rb()
     left_b, bottom_b, right_b, top_b = b.get_bb()
 
@@ -148,6 +147,18 @@ def range_collide(ra, b):
     if bottom_a > top_b: return  False
 
     return True
+
+def agro_collide(ra,rb):
+    left_a, bottom_a, right_a, top_a = ra.get_rb()
+    left_b, bottom_b, right_b, top_b = rb.get_rb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
+
 
 def create_world():
     global peasantList, commandbar, qwer, sqwer, unitselect, back_frame, cursor, cardList, card_type, card_no, \
@@ -323,10 +334,8 @@ def update(frame_time):
    for unit in unitList:
        unit.update(frame_time)
 
-
    for peasant in peasantList:
        peasant.update(frame_time)
-
 
 
 def draw_scene():
@@ -345,15 +354,20 @@ def draw_scene():
     if selection > -1:
         sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 350 - 100*selection)
 
-    for i in range(len(enemyList)):
-        enemyList[-i].draw()
-        #enemyList[-i].draw_bb()
-        #enemyList[-i].draw_rb()
+    for enemy in enemyList:
+        enemy.draw()
+        enemy.draw_bb()
+        enemy.draw_rb()
+
+    #for i in range(len(enemyList)):
+    #    enemyList[-i].draw()
+    #    enemyList[-i].draw_bb()
+    #    enemyList[-i].draw_rb()
 
     for unit in unitList:
         unit.draw()
-        #unit.draw_bb()
-        #unit.draw_rb()
+        unit.draw_bb()
+        unit.draw_rb()
 
     for building in buildingList:
         building.draw()

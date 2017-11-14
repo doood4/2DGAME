@@ -100,12 +100,12 @@ class Footman:
             self.hp = 0
             self.state = 8
             self.frame = 0
-
+            self.motion = 0
         # 살음
         elif self.hp > 0:
             # 자동 이동 목표
             for enemy in main_state.enemyList:
-                if not main_state.range_collide(self, enemy):
+                if not main_state.agro_collide(self, enemy):
                     if self.x < 350:
                         if self.x > 240:
                             self.x_vector = -1
@@ -139,7 +139,7 @@ class Footman:
 
             # 공격하러 이동
             for enemy in main_state.enemyList:
-                if main_state.range_collide(self, enemy):
+                if main_state.agro_collide(self, enemy):
                     if self.x > enemy.x + 10:
                         self.x_vector = -1
                         if self.y > enemy.y + 10:
@@ -216,8 +216,6 @@ class Footman:
 
         if self.motion == 4:
             distance = 0
-        elif self.motion == 8:
-            distance = 0
         else:
             self.x += self.x_vector * distance
             self.y += self.y_vector * distance
@@ -288,12 +286,12 @@ class Archer:
             self.hp = 0
             self.state = 8
             self.frame = 0
-
+            self.motion = 0
         # 살음
         elif self.hp > 0:
             # 자동 이동 목표
             for enemy in main_state.enemyList:
-                if not main_state.range_collide(self, enemy):
+                if not main_state.agro_collide(self, enemy):
                     if self.x < 350:
                         if self.x > 240:
                             self.x_vector = -1
@@ -327,7 +325,7 @@ class Archer:
 
             # 공격하러 이동
             for enemy in main_state.enemyList:
-                if main_state.range_collide(self, enemy):
+                if main_state.agro_collide(self, enemy):
                     if self.x > enemy.x + 10:
                         self.x_vector = -1
                         if self.y > enemy.y + 10:
@@ -406,8 +404,6 @@ class Archer:
 
         if self.motion == 4:
             distance = 0
-        elif self.motion == 8:
-            distance = 0
         else:
             self.x += self.x_vector * distance
             self.y += self.y_vector * distance
@@ -473,11 +469,11 @@ class Knight:
             self.hp = 0
             self.state = 8
             self.frame = 0
-
+            self.motion = 0
         # 살음
         elif self.hp > 0:
             for enemy in main_state.enemyList:
-                if not main_state.range_collide(self, enemy):
+                if not main_state.agro_collide(self, enemy):
                     if self.x < 350:
                         if self.x > 240:
                             self.x_vector = -1
@@ -511,7 +507,7 @@ class Knight:
 
             # 공격하러 이동
             for enemy in main_state.enemyList:
-                if main_state.range_collide(self, enemy):
+                if main_state.agro_collide(self, enemy):
                     if self.x > enemy.x + 10:
                         self.x_vector = -1
                         if self.y > enemy.y + 10:
@@ -588,12 +584,9 @@ class Knight:
 
         if self.motion == 4:
             distance = 0
-        elif self.motion == 8:
-            distance = 0
         else:
             self.x += self.x_vector * distance
             self.y += self.y_vector * distance
-
 
     def draw(self):
         self.image.clip_draw(self.state * 100, int(self.frame) * 100, 100, 100,
@@ -607,10 +600,9 @@ class Knight:
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
-    #사거리
+    # 사거리
     def get_rb(self):
         return self.x - 60, self.y - 60, self.x + 60, self.y + 60
-
 
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
@@ -663,12 +655,11 @@ class Mage:
             self.motion = 0
             self.state = 8
             self.frame = 0
-
         # 살음
         elif self.hp > 0:
             # 자동 이동 목표
             for enemy in main_state.enemyList:
-                if not main_state.range_collide(self, enemy):
+                if not main_state.agro_collide(self, enemy):
                     if self.x < 350:
                         if self.x > 240:
                             self.x_vector = -1
@@ -702,7 +693,7 @@ class Mage:
 
             # 공격하러 이동
             for enemy in main_state.enemyList:
-                if main_state.range_collide(self, enemy):
+                if main_state.agro_collide(self, enemy):
                     if self.x > enemy.x + 10:
                         self.x_vector = -1
                         if self.y > enemy.y + 10:
@@ -781,8 +772,6 @@ class Mage:
 
         if self.motion == 4:
             distance = 0
-        elif self.motion == 8:
-            distance = 0
         else:
             self.x += self.x_vector * distance
             self.y += self.y_vector * distance
@@ -795,10 +784,9 @@ class Mage:
                 if main_state.range_collide(self, enemy):
                     self.target_x = enemy.x
                     self.target_y = enemy.y
-                    self.effect.clip_draw((self.frame - self.motion)*20,0,20,20,self.target_x,self.target_y + 50 - self.frame*5,40,40)
+                    self.effect.clip_draw((self.frame - self.motion)*100,0,100,100,self.target_x,self.target_y + 50 - self.frame*5)
         for i in range(int(self.hp)):
             self.life_box.draw(self.x - 15 + i * 2, self.y - 20, 2, 4)
-
 
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
@@ -806,13 +794,16 @@ class Mage:
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
-    #사거리
+    # 사거리
     def get_rb(self):
         return self.x - self.range, self.y - self.range, self.x + self.range, self.y + self.range
 
-
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
+
+
+class Gryphon:
+    pass
 
 
 class human_Tower1:
@@ -833,8 +824,8 @@ class human_Tower1:
         self.target_x = 0
         self.target_y = 0
 
-        self.hp = 60
-        self.atk = 0.5
+        self.hp = 6
+        self.atk = 0.1
         self.range = 100
 
         if human_Tower1.image == None:
@@ -847,6 +838,7 @@ class human_Tower1:
     def update(self, frame_time):
         if self.hp <= 0:
             main_state.unitList.remove(self)
+            main_state.buildingList.remove(self)
             main_state.Orc_Score += 1
 
         # 공격대상 없다
@@ -906,8 +898,8 @@ class human_Tower2:
         self.target_x = 0
         self.target_y = 0
 
-        self.hp = 60
-        self.atk = 0.5
+        self.hp = 6
+        self.atk = 0.1
         self.range = 100
 
         if human_Tower2.image == None:
@@ -920,6 +912,7 @@ class human_Tower2:
     def update(self, frame_time):
         if self.hp <= 0:
             main_state.unitList.remove(self)
+            main_state.buildingList.remove(self)
             main_state.Orc_Score += 1
 
         # 공격대상 없다
@@ -990,14 +983,14 @@ class human_Castle:
             self.life_box.draw(self.x - 50 + i, self.y - 50, 1, 5)
 
     def get_bb(self):
-        return self.x - 80, self.y - 80, self.x + 80, self.y + 80
+        return self.x - 50, self.y - 40, self.x + 50, self.y + 40
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
     # 사거리
     def get_rb(self):
-        return self.x - self.range, self.y - self.range, self.x + self.range, self.y + self.range
+        return self.x - 200, self.y - 50, self.x + 200, self.y + 50
 
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
@@ -1010,7 +1003,7 @@ class Grunt:
     life_box = None
 
     PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
-    RUN_SPEED_KMPH = 4.0  # Km/h
+    RUN_SPEED_KMPH = 10.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -1021,7 +1014,7 @@ class Grunt:
 
     def __init__(self):
         self.x, self.y = random.randint(400, 500), random.randint(400, 500)
-        self.size = 50
+        self.size = 100
         self.state = 4
         self.frame = 0
         self.motion = 0
@@ -1039,123 +1032,132 @@ class Grunt:
             Grunt.life_box = load_image('Images\\orc_life.png')
 
     def update(self, frame_time):
-        # 자동 이동 목표
-        for unit in main_state.unitList:
-            if not main_state.range_collide(self, unit):
-                if self.x < 350:
-                    if self.x > 240:
-                        self.x_vector = -1
-                        self.y_vector = -1
-
-                    elif self.x < 220:
-                        self.x_vector = 1
-                        self.y_vector = -1
-
-                    else:
-                        self.x_vector = 0
-                        self.y_vector = -1
-
-                else:
-                    if self.x > 460:
-                        self.x_vector = -1
-                        self.y_vector = -1
-
-                    elif self.x < 440:
-                        self.x_vector = 1
-                        self.y_vector = -1
-
-                    else:
-                        self.x_vector = 0
-                        self.y_vector = -1
-
-        # 공격하러 이동
-        for unit in main_state.unitList:
-            if main_state.range_collide(self, unit):
-                if self.x > unit.x + 10:
-                    self.x_vector = -1
-                    if self.y > unit.y + 10:
-                        self.y_vector = -1
-                        break
-                    elif self.y < unit.y - 10:
-                        self.y_vector = 1
-                        break
-                    else:
-                        self.y_vector = 0
-                        break
-                elif self.x < unit.x - 10:
-                    self.x_vector = 1
-                    if self.y > unit.y + 10:
-                        self.y_vector = -1
-                        break
-                    elif self.y < unit.y - 10:
-                        self.y_vector = 1
-                        break
-                    else:
-                        self.y_vector = 0
-                        break
-                else:
-                    self.x_vector = 0
-                    if self.y > unit.y + 10:
-                        self.y_vector = -1
-                        break
-                    elif self.y < unit.y - 10:
-                        self.y_vector = 1
-                        break
-                    else:
-                        self.y_vector = 0
-                        break
-
-        if self.x_vector == 0 and self.y_vector == 1:
-            self.state = 0
-        elif self.x_vector == 1 and self.y_vector == 1:
-            self.state = 1
-        elif self.x_vector == 1 and self.y_vector == 0:
-            self.state = 2
-        elif self.x_vector == 1 and self.y_vector == -1:
-            self.state = 3
-        elif self.x_vector == 0 and self.y_vector == -1:
-            self.state = 4
-        elif self.x_vector == -1 and self.y_vector == -1:
-            self.state = 5
-        elif self.x_vector == -1 and self.y_vector == 0:
-            self.state = 6
-        elif self.x_vector == -1 and self.y_vector == 1:
-            self.state = 7
-
-
-        # 공격대상 없다
-        for unit in main_state.unitList:
-            if not main_state.collide(unit,self):
-                self.motion = 0
-        # 공격대상 있다
-        for unit in main_state.unitList:
-            if main_state.collide(unit, self):
-                self.motion = 4
-                if self.frame == 4:
-                    unit.hp -= self.atk
-                    break
-
         # 죽음
-        if self.hp <= 0:
-            self.motion = 8
+        if self.hp < 0:
+            self.hp = 0
+            self.state = 8
+            self.frame = 0
+            self.motion = 0
+        # 살음
+        elif self.hp > 0:
+            # 자동 이동 목표
+            for unit in main_state.unitList:
+                if not main_state.agro_collide(self, unit):
+                    if self.x < 350:
+                        if self.x > 240:
+                            self.x_vector = -1
+                            self.y_vector = -1
+
+                        elif self.x < 220:
+                            self.x_vector = 1
+                            self.y_vector = -1
+
+                        else:
+                            self.x_vector = 0
+                            self.y_vector = -1
+                    else:
+                        if self.x > 460:
+                            self.x_vector = -1
+                            self.y_vector = -1
+
+                        elif self.x < 440:
+                            self.x_vector = 1
+                            self.y_vector = -1
+
+                        else:
+                            self.x_vector = 0
+                            self.y_vector = -1
+
+                    if self.y < 150 and self.x < 350:
+                        self.x_vector = 1
+                    elif self.y < 150 and self.x >= 350:
+                        self.x_vector = -1
+
+            # 공격하러 이동
+            for unit in main_state.unitList:
+                if main_state.agro_collide(self, unit):
+                    if self.x > unit.x + 20:
+                        self.x_vector = -1
+                        if self.y > unit.y + 20:
+                            self.y_vector = -1
+                            break
+                        elif self.y < unit.y - 20:
+                            self.y_vector = 1
+                            break
+                        else:
+                            self.y_vector = 0
+                            break
+                    elif self.x < unit.x - 20:
+                        self.x_vector = 1
+                        if self.y > unit.y + 20:
+                            self.y_vector = -1
+                            break
+                        elif self.y < unit.y - 20:
+                            self.y_vector = 1
+                            break
+                        else:
+                            self.y_vector = 0
+                            break
+                    else:
+                        self.x_vector = 0
+                        if self.y > unit.y + 20:
+                            self.y_vector = -1
+                            break
+                        elif self.y < unit.y - 20:
+                            self.y_vector = 1
+                            break
+                        else:
+                            self.y_vector = 0
+                            break
+
+            if self.x_vector == 0 and self.y_vector == 1:
+                self.state = 0
+            elif self.x_vector == 1 and self.y_vector == 1:
+                self.state = 1
+            elif self.x_vector == 1 and self.y_vector == 0:
+                self.state = 2
+            elif self.x_vector == 1 and self.y_vector == -1:
+                self.state = 3
+            elif self.x_vector == 0 and self.y_vector == -1:
+                self.state = 4
+            elif self.x_vector == -1 and self.y_vector == -1:
+                self.state = 5
+            elif self.x_vector == -1 and self.y_vector == 0:
+                self.state = 6
+            elif self.x_vector == -1 and self.y_vector == 1:
+                self.state = 7
+
+            # 공격대상 없다
+            for unit in main_state.unitList:
+                if not main_state.collide(unit, self):
+                    self.motion = 0
+            # 공격대상 있다
+            for unit in main_state.unitList:
+                if main_state.collide(unit, self):
+                    self.motion = 4
+                    if self.frame == 4:
+                        unit.hp -= self.atk
+                        break
 
         self.life_time += frame_time
         distance = Grunt.RUN_SPEED_PPS * frame_time
         self.total_frames += Grunt.FRAMES_PER_ACTION * Grunt.ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 4 + self.motion
-        if self.frame == 10:
-            main_state.enemyList.remove(self)
+
+        if self.state == 8:
+            self.frame += 0.5
+            if self.frame > 7:
+                main_state.enemyList.remove(self)
+        else:
+            self.frame = int(self.total_frames) % 4 + self.motion
 
         if self.motion == 4:
-            distance = 0
-        elif self.motion == 8:
             distance = 0
         else:
             self.x += self.x_vector * distance
             self.y += self.y_vector * distance
 
     def draw(self):
-        self.image.clip_draw(self.state * 50, self.frame * 50, 50, 50,
+        self.image.clip_draw(self.state * 100, int(self.frame) * 100, 100, 100,
                              self.x, self.y, self.size, self.size)
         for i in range(int(self.hp)):
             self.life_box.draw(self.x - 15 + i * 2, self.y + 20, 2, 4)
@@ -1193,7 +1195,7 @@ class Ogre:
 
     def __init__(self):
         self.x, self.y = random.randint(150, 330), random.randint(400, 500)
-        self.size = 60
+        self.size = 100
         self.state = 4
         self.frame = 0
         self.motion = 0
@@ -1211,122 +1213,132 @@ class Ogre:
             Ogre.life_box = load_image('Images\\orc_life.png')
 
     def update(self, frame_time):
-        # 자동 이동 목표
-        for unit in main_state.unitList:
-            if not main_state.range_collide(self, unit):
-                if self.x < 350:
-                    if self.x > 240:
-                        self.x_vector = -1
-                        self.y_vector = -1
-
-                    elif self.x < 220:
-                        self.x_vector = 1
-                        self.y_vector = -1
-
-                    else:
-                        self.x_vector = 0
-                        self.y_vector = -1
-
-                else:
-                    if self.x > 460:
-                        self.x_vector = -1
-                        self.y_vector = -1
-
-                    elif self.x < 440:
-                        self.x_vector = 1
-                        self.y_vector = -1
-
-                    else:
-                        self.x_vector = 0
-                        self.y_vector = -1
-
-        # 공격하러 이동
-        for unit in main_state.unitList:
-            if main_state.range_collide(self, unit):
-                if self.x > unit.x + 10:
-                    self.x_vector = -1
-                    if self.y > unit.y + 10:
-                        self.y_vector = -1
-                        break
-                    elif self.y < unit.y - 10:
-                        self.y_vector = 1
-                        break
-                    else:
-                        self.y_vector = 0
-                        break
-                elif self.x < unit.x - 10:
-                    self.x_vector = 1
-                    if self.y > unit.y + 10:
-                        self.y_vector = -1
-                        break
-                    elif self.y < unit.y - 10:
-                        self.y_vector = 1
-                        break
-                    else:
-                        self.y_vector = 0
-                        break
-                else:
-                    self.x_vector = 0
-                    if self.y > unit.y + 10:
-                        self.y_vector = -1
-                        break
-                    elif self.y < unit.y - 10:
-                        self.y_vector = 1
-                        break
-                    else:
-                        self.y_vector = 0
-                        break
-
-        if self.x_vector == 0 and self.y_vector == 1:
-            self.state = 0
-        elif self.x_vector == 1 and self.y_vector == 1:
-            self.state = 1
-        elif self.x_vector == 1 and self.y_vector == 0:
-            self.state = 2
-        elif self.x_vector == 1 and self.y_vector == -1:
-            self.state = 3
-        elif self.x_vector == 0 and self.y_vector == -1:
-            self.state = 4
-        elif self.x_vector == -1 and self.y_vector == -1:
-            self.state = 5
-        elif self.x_vector == -1 and self.y_vector == 0:
-            self.state = 6
-        elif self.x_vector == -1 and self.y_vector == 1:
-            self.state = 7
-
-        # 공격대상 없다
-        for unit in main_state.unitList:
-            if not main_state.collide(unit, self):
-                self.motion = 0
-        # 공격대상 있다
-        for unit in main_state.unitList:
-            if main_state.collide(unit, self):
-                self.motion = 4
-                if self.frame == 4:
-                    unit.hp -= self.atk
-                    break
-
         # 죽음
-        if self.hp <= 0:
-            self.motion = 8
+        if self.hp < 0:
+            self.hp = 0
+            self.state = 8
+            self.frame = 0
+            self.motion = 0
+        # 살음
+        elif self.hp > 0:
+            # 자동 이동 목표
+            for unit in main_state.unitList:
+                if not main_state.agro_collide(self, unit):
+                    if self.x < 350:
+                        if self.x > 240:
+                            self.x_vector = -1
+                            self.y_vector = -1
+
+                        elif self.x < 220:
+                            self.x_vector = 1
+                            self.y_vector = -1
+
+                        else:
+                            self.x_vector = 0
+                            self.y_vector = -1
+                    else:
+                        if self.x > 460:
+                            self.x_vector = -1
+                            self.y_vector = -1
+
+                        elif self.x < 440:
+                            self.x_vector = 1
+                            self.y_vector = -1
+
+                        else:
+                            self.x_vector = 0
+                            self.y_vector = -1
+
+                    if self.y < 150 and self.x < 350:
+                        self.x_vector = 1
+                    elif self.y < 150 and self.x >= 350:
+                        self.x_vector = -1
+
+            # 공격하러 이동
+            for unit in main_state.unitList:
+                if main_state.agro_collide(self, unit):
+                    if self.x > unit.x + 20:
+                        self.x_vector = -1
+                        if self.y > unit.y + 20:
+                            self.y_vector = -1
+                            break
+                        elif self.y < unit.y - 20:
+                            self.y_vector = 1
+                            break
+                        else:
+                            self.y_vector = 0
+                            break
+                    elif self.x < unit.x - 20:
+                        self.x_vector = 1
+                        if self.y > unit.y + 20:
+                            self.y_vector = -1
+                            break
+                        elif self.y < unit.y - 20:
+                            self.y_vector = 1
+                            break
+                        else:
+                            self.y_vector = 0
+                            break
+                    else:
+                        self.x_vector = 0
+                        if self.y > unit.y + 20:
+                            self.y_vector = -1
+                            break
+                        elif self.y < unit.y - 20:
+                            self.y_vector = 1
+                            break
+                        else:
+                            self.y_vector = 0
+                            break
+
+            if self.x_vector == 0 and self.y_vector == 1:
+                self.state = 0
+            elif self.x_vector == 1 and self.y_vector == 1:
+                self.state = 1
+            elif self.x_vector == 1 and self.y_vector == 0:
+                self.state = 2
+            elif self.x_vector == 1 and self.y_vector == -1:
+                self.state = 3
+            elif self.x_vector == 0 and self.y_vector == -1:
+                self.state = 4
+            elif self.x_vector == -1 and self.y_vector == -1:
+                self.state = 5
+            elif self.x_vector == -1 and self.y_vector == 0:
+                self.state = 6
+            elif self.x_vector == -1 and self.y_vector == 1:
+                self.state = 7
+
+            # 공격대상 없다
+            for unit in main_state.unitList:
+                if not main_state.collide(unit, self):
+                    self.motion = 0
+            # 공격대상 있다
+            for unit in main_state.unitList:
+                if main_state.collide(unit, self):
+                    self.motion = 4
+                    if self.frame == 4:
+                        unit.hp -= self.atk
+                        break
 
         self.life_time += frame_time
         distance = Ogre.RUN_SPEED_PPS * frame_time
         self.total_frames += Ogre.FRAMES_PER_ACTION * Ogre.ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 4 + self.motion
-        if self.frame == 10:
-            main_state.enemyList.remove(self)
+
+        if self.state == 8:
+            self.frame += 0.5
+            if self.frame > 7:
+                main_state.enemyList.remove(self)
+        else:
+            self.frame = int(self.total_frames) % 4 + self.motion
 
         if self.motion == 4:
-            distance = 0
-        elif self.motion == 8:
             distance = 0
         else:
             self.x += self.x_vector * distance
             self.y += self.y_vector * distance
 
     def draw(self):
-        self.image.clip_draw(self.state * 50, self.frame * 50, 50, 50,
+        self.image.clip_draw(self.state * 100, int(self.frame) * 100, 100, 100,
                              self.x, self.y, self.size, self.size)
         for i in range(int(self.hp)):
             self.life_box.draw(self.x - 15 + i * 2, self.y + 20, 2, 4)
@@ -1345,8 +1357,14 @@ class Ogre:
         draw_rectangle(*self.get_rb())
     pass
 
+
 class Death_kinght:
     pass
+
+
+class Devil:
+    pass
+
 
 class orc_Tower1:
     image = None
@@ -1519,14 +1537,14 @@ class orc_Castle:
             self.life_box.draw(self.x - 50 + i, self.y + 50, 1, 5)
 
     def get_bb(self):
-        return self.x - 40, self.y - 30, self.x + 40, self.y + 30
+        return self.x - 50, self.y - 40, self.x + 50, self.y + 40
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
     # 사거리
     def get_rb(self):
-        return self.x - self.range, self.y - self.range, self.x + self.range, self.y + self.range
+        return self.x - 200, self.y - 50, self.x + 200, self.y + 50
 
     def draw_rb(self):
         draw_rectangle(*self.get_rb())
