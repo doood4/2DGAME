@@ -325,8 +325,12 @@ def update(frame_time):
    if TIME % 5 == 0 and get_time() - TIME > 0.01 and get_time() - TIME < 0.03:
         grunt = Grunt()
         enemyList.append(grunt)
-        troll = Troll()
+        troll = Troll()#
         enemyList.append(troll)
+        ogre = Ogre()
+        enemyList.append(ogre)
+        death = Death_kinght()
+        enemyList.append(death)
 
    for enemy in enemyList:
         enemy.update(frame_time)
@@ -354,20 +358,20 @@ def draw_scene():
     if selection > -1:
         sqwer.clip_draw(0, 300 - 100*selection , 120, 100, 60, 350 - 100*selection)
 
-    for enemy in enemyList:
-        enemy.draw()
-        enemy.draw_bb()
-        enemy.draw_rb()
+    #for enemy in enemyList:
+    #    enemy.draw()
+    #    enemy.draw_bb()
+    #    enemy.draw_rb()
 
-    #for i in range(len(enemyList)):
-    #    enemyList[-i].draw()
-    #    enemyList[-i].draw_bb()
-    #    enemyList[-i].draw_rb()
+    for i in range(len(enemyList)):
+        enemyList[-i].draw()
+        #enemyList[-i].draw_bb()
+        #enemyList[-i].draw_rb()
 
     for unit in unitList:
         unit.draw()
-        unit.draw_bb()
-        unit.draw_rb()
+        #unit.draw_bb()
+        #unit.draw_rb()
 
     for building in buildingList:
         building.draw()
