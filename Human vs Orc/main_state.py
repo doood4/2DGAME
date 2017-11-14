@@ -27,7 +27,7 @@ card_type = 0
 card_no = 0
 
 # 게임 변수
-Gold = 120
+Gold = 150
 Human_Score = 0
 Orc_Score = 0
 selection = -1
@@ -376,7 +376,10 @@ def handle_events(frame_time):
 
 
 def update(frame_time):
+    # 게임 종료 조건
     if Human_Score == 3 or Orc_Score == 3:
+        game_framework.push_state(result_state)
+    if TIME == 300:
         game_framework.push_state(result_state)
 
     # 시간 체크
