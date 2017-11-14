@@ -325,8 +325,8 @@ def update(frame_time):
    if TIME % 5 == 0 and get_time() - TIME > 0.01 and get_time() - TIME < 0.03:
         grunt = Grunt()
         enemyList.append(grunt)
-        ogre = Ogre()
-        enemyList.append(ogre)
+        troll = Troll()
+        enemyList.append(troll)
 
    for enemy in enemyList:
         enemy.update(frame_time)
