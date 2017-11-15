@@ -103,6 +103,7 @@ def change_card():
     numList.append(cardList[selection].type)
     Gold -= cardList[selection].cost
     cardList[selection].type = cardList[4].type
+    cardList[selection].cost = cardList[4].cost
     del (cardList[4])
     x = random.randint(0, len(numList) - 1)
     card_type = numList[x]
@@ -168,7 +169,7 @@ def agro_collide(ab,b):
 
 def create_world():
     global peasantList, commandbar, qwer, sqwer, unitselect, back_frame, cursor, cardList, card_type, card_no, \
-        enemyList
+        enemyList, map
 
     # 시작 일꾼
     peasant = Peasant()
@@ -196,6 +197,7 @@ def create_world():
     # 시작 카드 설정
     init_cards()
 
+    map = load_image('1d.png')
     back_frame = load_image('Images\\back.png')
     commandbar = load_image('Images\\commandbar_frame.png')
     qwer = load_image('Images\\qwer.png')
@@ -234,7 +236,7 @@ def handle_events(frame_time):
             game_framework.quit()
         elif event.type == SDL_MOUSEMOTION :
             mx = event.x
-            my = 720 - event.y
+            my = 680 - event.y
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
@@ -379,9 +381,9 @@ def handle_events(frame_time):
 def update(frame_time):
     # 게임 종료 조건
     if Human_Score == 3 or Orc_Score == 3:
-        game_framework.push_state(pause_state)
+        game_framework.change_state(pause_state)
     if TIME == 300:
-        game_framework.push_state(pause_state)
+        game_framework.change_state(pause_state)
 
     # 시간 체크
     TIMER()
@@ -405,6 +407,8 @@ def update(frame_time):
 def draw_scene():
 
     back_frame.draw(290, 340, 580, 680)
+    #map.draw(120+230,340,460,680)
+
     commandbar.draw(60, 340, 120, 680)
     qwer.draw(60,250)
     # 타이머
@@ -433,16 +437,16 @@ def draw_scene():
     # 적 뒤에서 부터 그리기
     for i in range(len(enemyList)):
         enemyList[-i].draw()
-        enemyList[-i].draw_bb()
-        enemyList[-i].draw_rb()
-        enemyList[-i].draw_ab()
+        #enemyList[-i].draw_bb()
+        #enemyList[-i].draw_rb()
+        #enemyList[-i].draw_ab()
 
     # 아군 그리기
     for unit in unitList:
         unit.draw()
-        unit.draw_bb()
-        unit.draw_rb()
-        unit.draw_ab()
+        #unit.draw_bb()
+        #unit.draw_rb()
+        #unit.draw_ab()
 
     # 아군 건물 그리기
     for building in buildingList:

@@ -18,7 +18,7 @@ class Card:
         elif self.type == 4: # 메이지
             self.cost = 100
         elif self.type == 5: # 그리폰
-            self.cost = 50
+            self.cost = 200
 
         self.xsize = 60
         self.ysize = 80

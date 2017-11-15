@@ -9,7 +9,7 @@ class Peasant:
     image = None
 
     PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
-    RUN_SPEED_KMPH = 20.0  # Km/h
+    RUN_SPEED_KMPH = 6.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -1144,6 +1144,27 @@ class Grunt:
             for i in range(len(main_state.unitList)):
                 if  main_state.collide(self,main_state.unitList[-i]):
                     self.motion = 4
+                    if self.x > main_state.unitList[-i].x + 10:
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 5
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 7
+                        else:
+                            self.state = 6
+                    elif self.x < main_state.unitList[-i].x - 10:
+                        self.x_vector = 1
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 3
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 1
+                        else:
+                            self.state = 2
+                    else:
+                        self.x_vector = 0
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 4
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 0
                     if self.frame == 4:
                         main_state.unitList[-i].hp -= self.atk
                         break
@@ -1317,6 +1338,27 @@ class Troll:
                     self.motion = 4
                     self.target_x = main_state.unitList[-i].x
                     self.target_y = main_state.unitList[-i].y
+                    if self.x > main_state.unitList[-i].x + 10:
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 5
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 7
+                        else:
+                            self.state = 6
+                    elif self.x < main_state.unitList[-i].x - 10:
+                        self.x_vector = 1
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 3
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 1
+                        else:
+                            self.state = 2
+                    else:
+                        self.x_vector = 0
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 4
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 0
                     if self.frame == 4:
                         main_state.unitList[-i].hp -= self.atk
                         break
@@ -1484,6 +1526,27 @@ class Ogre:
             for i in range(len(main_state.unitList)):
                 if main_state.collide(self,main_state.unitList[-i]):
                     self.motion = 4
+                    if self.x > main_state.unitList[-i].x + 10:
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 5
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 7
+                        else:
+                            self.state = 6
+                    elif self.x < main_state.unitList[-i].x - 10:
+                        self.x_vector = 1
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 3
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 1
+                        else:
+                            self.state = 2
+                    else:
+                        self.x_vector = 0
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 4
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 0
                     if self.frame == 4:
                         main_state.unitList[-i].hp -= self.atk
                         break
@@ -1659,6 +1722,27 @@ class Death_kinght:
                     self.motion = 4
                     self.target_x = main_state.unitList[-i].x
                     self.target_y = main_state.unitList[-i].y
+                    if self.x > main_state.unitList[-i].x + 10:
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 5
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 7
+                        else:
+                            self.state = 6
+                    elif self.x < main_state.unitList[-i].x - 10:
+                        self.x_vector = 1
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 3
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 1
+                        else:
+                            self.state = 2
+                    else:
+                        self.x_vector = 0
+                        if self.y > main_state.unitList[-i].y + 10:
+                            self.state = 4
+                        elif self.y < main_state.unitList[-i].y - 10:
+                            self.state = 0
                     if self.frame == 4:
                         main_state.unitList[-i].hp -= self.atk
                         break
