@@ -80,6 +80,7 @@ def draw_cards():
     #current
     for i in range(4):
         cardList[i].image.clip_draw(cardList[i].type * 60, 0, 60,80,70,350 - cardList[i].no*100)
+
     #next
     cardList[4].image.clip_draw(cardList[4].type*60,0,60,80,70,440,40,60)
 
@@ -97,7 +98,7 @@ def init_cards():
 
 # 카드 바꾸기
 def change_card():
-    global selection, cardList,numList, card_no,card_type, Gold
+    global selection, cardList, numList, card_no, card_type, Gold
 
     numList.append(cardList[selection].type)
     Gold -= cardList[selection].cost
@@ -120,7 +121,7 @@ def unit_build():
         build = False
 
     if selection != -1 and mx > 130 :
-        unitselect.clip_draw(50 * (cardList[selection].type - 1), 50 - 50*build, 50, 50, mx, my,40,40)
+        unitselect.clip_draw(100 * (cardList[selection].type - 1), 100 - 100*build, 100, 100, mx, my)
 
 def get_frame_time():
 
@@ -153,9 +154,9 @@ def range_collide(ra, b):
 
     return True
 
-def agro_collide(ra,rb):
-    left_a, bottom_a, right_a, top_a = ra.get_rb()
-    left_b, bottom_b, right_b, top_b = rb.get_rb()
+def agro_collide(ab,b):
+    left_a, bottom_a, right_a, top_a = ab.get_ab()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
 
     if left_a > right_b: return False
     if right_a < left_b: return False
@@ -174,16 +175,16 @@ def create_world():
     peasantList.append(peasant)
 
     # 시작 건물 배치
-    tower1 = orc_Tower1()
-    tower2 = orc_Tower2()
-    enemyList.append(tower1)
-    enemyList.append(tower2)
-
     castle = orc_Castle()
     enemyList.append(castle)
     castle = human_Castle()
     unitList.append(castle)
     buildingList.append(castle)
+
+    tower1 = orc_Tower1()
+    tower2 = orc_Tower2()
+    enemyList.append(tower1)
+    enemyList.append(tower2)
 
     tower1 = human_Tower1()
     tower2 = human_Tower2()
@@ -195,11 +196,11 @@ def create_world():
     # 시작 카드 설정
     init_cards()
 
-    back_frame = load_image('back.png')
-    commandbar = load_image('commandbar_frame.png')
-    qwer = load_image('qwer.png')
-    sqwer = load_image('sqwer.png')
-    unitselect = load_image('unitselect.png')
+    back_frame = load_image('Images\\back.png')
+    commandbar = load_image('Images\\commandbar_frame.png')
+    qwer = load_image('Images\\qwer.png')
+    sqwer = load_image('Images\\sqwer.png')
+    unitselect = load_image('Images\\unitselect.png')
     cursor = load_image('Images\\cursor.png')
 
 
@@ -378,9 +379,9 @@ def handle_events(frame_time):
 def update(frame_time):
     # 게임 종료 조건
     if Human_Score == 3 or Orc_Score == 3:
-        game_framework.push_state(result_state)
+        game_framework.push_state(pause_state)
     if TIME == 300:
-        game_framework.push_state(result_state)
+        game_framework.push_state(pause_state)
 
     # 시간 체크
     TIMER()
@@ -434,12 +435,14 @@ def draw_scene():
         enemyList[-i].draw()
         enemyList[-i].draw_bb()
         enemyList[-i].draw_rb()
+        enemyList[-i].draw_ab()
 
     # 아군 그리기
     for unit in unitList:
         unit.draw()
         unit.draw_bb()
         unit.draw_rb()
+        unit.draw_ab()
 
     # 아군 건물 그리기
     for building in buildingList:

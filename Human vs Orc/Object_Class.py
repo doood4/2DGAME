@@ -8,15 +8,15 @@ class Card:
         self.type = main_state.card_type
         self.no = main_state.card_no
         if self.type == 0: # 일꾼
-            self.cost = 50
+            self.cost = 25
         elif self.type == 1: # 풋맨
             self.cost = 50
         elif self.type == 2: # 아처
             self.cost = 50
         elif self.type == 3: # 나이트
-            self.cost = 50
+            self.cost = 100
         elif self.type == 4: # 메이지
-            self.cost = 50
+            self.cost = 100
         elif self.type == 5: # 그리폰
             self.cost = 50
 
