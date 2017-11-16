@@ -442,14 +442,14 @@ def draw_scene():
     # 적 뒤에서 부터 그리기
     for i in range(len(enemyList)):
         enemyList[-i].draw()
-        #enemyList[-i].draw_bb()
+        enemyList[-i].draw_bb()
         #enemyList[-i].draw_rb()
         #enemyList[-i].draw_ab()
 
     # 아군 그리기
     for unit in unitList:
         unit.draw()
-        #unit.draw_bb()
+        unit.draw_bb()
         #unit.draw_rb()
         #unit.draw_ab()
 
