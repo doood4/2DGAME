@@ -216,7 +216,7 @@ class Footman:
         self.image.clip_draw(self.state * 100, int(self.frame) * 100, 100, 100,
                              self.x, self.y,self.size,self.size)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i, self.y - 20,1,4)
+            self.life_box.draw(self.x - 15 + 2*i, self.y - 25, 2, 4)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -245,7 +245,7 @@ class Archer:
     life_box = None
 
     PIXEL_PER_METER = (10.0 / 0.5)                     # 10 pixel 50 cm
-    RUN_SPEED_KMPH = 4.0                               # Km/h
+    RUN_SPEED_KMPH = 3.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -409,7 +409,7 @@ class Archer:
         if self.motion == 4:
             self.arrow.clip_draw(self.state * 50, 0, 50, 50, self.x + (self.target_x - self.x)*(self.frame-3)/5, self.y + (self.target_y - self.y)*(self.frame-3)/5 )
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i*2, self.y - 20,2,4)
+            self.life_box.draw(self.x - 10 + i*2, self.y - 25, 2, 4)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -437,7 +437,7 @@ class Knight:
     life_box = None
 
     PIXEL_PER_METER = (10.0 / 0.5)                     # 10 pixel 50 cm
-    RUN_SPEED_KMPH = 10.0                               # Km/h
+    RUN_SPEED_KMPH = 8.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -591,7 +591,7 @@ class Knight:
         self.image.clip_draw(self.state * 100, int(self.frame) * 100, 100, 100,
                              self.x, self.y,self.size,self.size)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i*2, self.y - 20,2,4)
+            self.life_box.draw(self.x - 20 + i*2, self.y - 35, 2, 4)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -620,7 +620,7 @@ class Mage:
     life_box = None
 
     PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
-    RUN_SPEED_KMPH = 4.0  # Km/h
+    RUN_SPEED_KMPH = 3.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -788,7 +788,7 @@ class Mage:
                     self.target_y = main_state.enemyList[-i].y
                     self.effect.clip_draw((self.frame - self.motion)*100,0,100,100,self.target_x,self.target_y + 50 - self.frame*5)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i * 2, self.y - 20, 2, 4)
+            self.life_box.draw(self.x - 10 + i * 2, self.y - 25, 2, 4)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -812,7 +812,197 @@ class Mage:
 
 
 class Gryphon:
-    pass
+    image = None
+    effect = None
+    life_box = None
+
+    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    RUN_SPEED_KMPH = 8.0  # Km/h
+    RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+    RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+    RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+    TIME_PER_ACTION = 0.5
+    ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+    FRAMES_PER_ACTION = 4
+
+    def __init__(self):
+        self.x, self.y = main_state.mx, main_state.my
+        self.size = 100
+        self.state = 2
+        self.frame = 0
+        self.motion = 0
+        self.life_time = 0.0
+        self.total_frames = 0.0
+        self.x_vector = 0
+        self.y_vector = 1
+
+        self.target_x = 0
+        self.target_y = 0
+
+        self.hp = 20
+        self.atk = 0.1
+
+        if Gryphon.image == None:
+            Gryphon.image = load_image('Images\\human_gryphon.png')
+        if Gryphon.effect == None:
+            Gryphon.effect = load_image('Images\\gryphon_atk.png')
+        if Gryphon.life_box == None:
+            Gryphon.life_box = load_image('Images\\human_life.png')
+
+    def update(self, frame_time):
+        # 죽음
+        if self.hp < 0:
+            main_state.unitList.remove(self)
+            self.hp = 0
+            self.state = 8
+            self.frame = 0
+            self.motion = 0
+        # 살음
+        elif self.hp > 0:
+            if self.motion == 0:
+                # 자동 이동
+                for i in range(len(main_state.enemyList)):
+                    if not main_state.agro_collide(self, main_state.enemyList[-i]):
+                        self.x_vector = 0
+                        self.y_vector = 1
+                        if self.y > 500 and self.x < 350:
+                            self.x_vector = 1
+                        elif self.y > 500 and self.x >= 350:
+                            self.x_vector = -1
+                # 공격하러 이동
+                for i in range(len(main_state.enemyList)):
+                    if main_state.agro_collide(self, main_state.enemyList[-i]):
+                        if self.x > main_state.enemyList[-i].x + 10:
+                            self.x_vector = -1
+                            if self.y > main_state.enemyList[-i].y + 10:
+                                self.y_vector = -1
+                                break
+                            elif self.y < main_state.enemyList[-i].y - 10:
+                                self.y_vector = 1
+                                break
+                            else:
+                                self.y_vector = 0
+                                break
+                        elif self.x < main_state.enemyList[-i].x - 10:
+                            self.x_vector = 1
+                            if self.y > main_state.enemyList[-i].y + 10:
+                                self.y_vector = -1
+                                break
+                            elif self.y < main_state.enemyList[-i].y - 10:
+                                self.y_vector = 1
+                                break
+                            else:
+                                self.y_vector = 0
+                                break
+                        else:
+                            self.x_vector = 0
+                            if self.y > main_state.enemyList[-i].y + 10:
+                                self.y_vector = -1
+                                break
+                            elif self.y < main_state.enemyList[-i].y - 10:
+                                self.y_vector = 1
+                                break
+
+                if self.x_vector == 0 and self.y_vector == 1:
+                    self.state = 0
+                elif self.x_vector == 1 and self.y_vector == 1:
+                    self.state = 1
+                elif self.x_vector == 1 and self.y_vector == 0:
+                    self.state = 2
+                elif self.x_vector == 1 and self.y_vector == -1:
+                    self.state = 3
+                elif self.x_vector == 0 and self.y_vector == -1:
+                    self.state = 4
+                elif self.x_vector == -1 and self.y_vector == -1:
+                    self.state = 5
+                elif self.x_vector == -1 and self.y_vector == 0:
+                    self.state = 6
+                elif self.x_vector == -1 and self.y_vector == 1:
+                    self.state = 7
+
+            # 공격대상 없다
+            for i in range(len(main_state.enemyList)):
+                if not main_state.collide(self, main_state.enemyList[-i]):
+                    self.motion = 0
+            # 공격대상 있다
+            for i in range(len(main_state.enemyList)):
+                if main_state.collide(self, main_state.enemyList[-i]):
+                    self.target_x = main_state.enemyList[-i].x
+                    self.target_y = main_state.enemyList[-i].y
+                    self.motion = 4
+                    if self.x > main_state.enemyList[-i].x + 10:
+                        if self.y > main_state.enemyList[-i].y + 10:
+                            self.state = 5
+                        elif self.y < main_state.enemyList[-i].y - 10:
+                            self.state = 7
+                        else:
+                            self.state = 6
+                    elif self.x < main_state.enemyList[-i].x - 10:
+                        self.x_vector = 1
+                        if self.y > main_state.enemyList[-i].y + 10:
+                            self.state = 3
+                        elif self.y < main_state.enemyList[-i].y - 10:
+                            self.state = 1
+                        else:
+                            self.state = 2
+                    else:
+                        self.x_vector = 0
+                        if self.y > main_state.enemyList[-i].y + 10:
+                            self.state = 4
+                        elif self.y < main_state.enemyList[-i].y - 10:
+                            self.state = 0
+                    if self.frame == 4:
+                        main_state.enemyList[-i].hp -= self.atk
+                        break
+
+        self.life_time += frame_time
+        distance = Gryphon.RUN_SPEED_PPS * frame_time
+        self.total_frames += Gryphon.FRAMES_PER_ACTION * Gryphon.ACTION_PER_TIME * frame_time
+
+        if self.state == 8:
+            distance = 0
+            self.frame += 0.5
+            if self.frame > 7:
+                main_state.unitList.remove(self)
+        else:
+            self.frame = int(self.total_frames) % 4 + self.motion
+
+        if self.motion == 4:
+            distance = 0
+        else:
+            self.x += self.x_vector * distance
+            self.y += self.y_vector * distance
+
+    def draw(self):
+        self.image.clip_draw(self.state * 100, int(self.frame) * 100, 100, 100,
+                             self.x, self.y, self.size, self.size)
+        if self.motion == 4:
+            self.effect.clip_draw((self.frame - self.motion) * 100, 0, 100, 100,
+                                  self.target_x, self.target_y)
+        for i in range(int(self.hp)):
+            self.life_box.draw(self.x - 20 + i * 2, self.y - 35, 2, 4)
+
+    def get_bb(self):
+        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
+
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
+
+    # 사거리
+    def get_rb(self):
+        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
+
+    def draw_rb(self):
+        draw_rectangle(*self.get_rb())
+
+    # 어그로
+    def get_ab(self):
+        return self.x - 100, self.y - 100, self.x + 100, self.y + 100
+
+    def draw_ab(self):
+        draw_rectangle(*self.get_ab())
+
 
 
 class human_Tower1:
@@ -834,7 +1024,7 @@ class human_Tower1:
         self.target_y = 0
 
         self.hp = 50
-        self.atk = 0.3
+        self.atk = 0.2
         self.range = 100
 
         if human_Tower1.image == None:
@@ -873,7 +1063,7 @@ class human_Tower1:
             self.bomb.draw(self.x + (self.target_x - self.x) * (self.frame + 1) / 4,
                            self.y + (self.target_y - self.y) * (self.frame + 1) / 4)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 30 + i, self.y - 40, 1, 5)
+            self.life_box.draw(self.x - 25 + i, self.y - 45, 2, 5)
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 20, self.y + 30
@@ -915,7 +1105,7 @@ class human_Tower2:
         self.target_y = 0
 
         self.hp = 50
-        self.atk = 0.3
+        self.atk = 0.2
         self.range = 100
 
         if human_Tower2.image == None:
@@ -954,7 +1144,7 @@ class human_Tower2:
             self.bomb.draw(self.x + (self.target_x - self.x)* (self.frame+1)/4,
                            self.y + (self.target_y - self.y)* (self.frame+1)/4)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 30 + i, self.y - 40, 1, 5)
+            self.life_box.draw(self.x - 25 + i, self.y - 45, 2, 5)
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 20, self.y + 30
@@ -1003,7 +1193,7 @@ class human_Castle:
     def draw(self):
         self.image.draw(self.x, self.y,100,100)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 50 + i, self.y - 50, 1, 5)
+            self.life_box.draw(self.x - 50 + i, self.y - 55, 2, 5)
 
     def get_bb(self):
         return self.x - 50, self.y - 40, self.x + 50, self.y + 40
@@ -1190,7 +1380,7 @@ class Grunt:
                              self.x, self.y, self.size, self.size)
 
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i * 2, self.y + 20, 2, 4)
+            self.life_box.draw(self.x - 15 + i * 2, self.y + 25, 2, 4)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -1244,7 +1434,7 @@ class Troll:
 
         self.hp = 10
         self.atk = 0.1
-        self.range = 60
+        self.range = 80
 
         if Troll.image == None:
             Troll.image = load_image('Images\\orc_troll.png')
@@ -1387,7 +1577,7 @@ class Troll:
         if self.motion == 4:
             self.axe.clip_draw((self.frame - self.motion)* 50, 0, 50, 50, self.x + (self.target_x - self.x)*(self.frame-3)/5, self.y + (self.target_y - self.y)*(self.frame-3)/5)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i * 2, self.y + 20, 2, 4)
+            self.life_box.draw(self.x - 10 + i * 2, self.y + 25, 2, 4)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -1572,7 +1762,7 @@ class Ogre:
         self.image.clip_draw(self.state * 100, int(self.frame) * 100, 100, 100,
                              self.x, self.y, self.size, self.size)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i * 2, self.y + 20, 2, 4)
+            self.life_box.draw(self.x - 30 + i * 2, self.y + 35, 2, 4)
 
     def get_bb(self):
         return self.x - 20, self.y - 20, self.x + 20, self.y + 20
@@ -1625,9 +1815,9 @@ class Death_kinght:
         self.target_x = 0
         self.target_y = 0
 
-        self.hp = 10
-        self.atk = 0.1
-        self.range = 80
+        self.hp = 20
+        self.atk = 0.2
+        self.range = 100
 
         if Death_kinght.image == None:
             Death_kinght.image = load_image('Images\\orc_deathknight.png')
@@ -1771,15 +1961,10 @@ class Death_kinght:
         if self.motion == 4:
             self.atk1.clip_draw(self.state * 50, 0, 50, 50, self.x + (self.target_x - self.x) * (self.frame - 3) / 5,
                                  self.y + (self.target_y - self.y) * (self.frame - 3) / 5)
-            for i in range(len(main_state.unitList)):
-                if main_state.range_collide(self,main_state.unitList[-i]):
-                    self.target_x = main_state.unitList[-i].x
-                    self.target_y = main_state.unitList[-i].y
-                    self.atk2.clip_draw((self.frame - self.motion) * 50, 0, 50, 50, self.target_x,
-                                          self.target_y-20)
-
+            self.atk2.clip_draw((self.frame - self.motion) * 50, 0, 50, 50,
+                                self.target_x, self.target_y-20)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 15 + i * 2, self.y + 20, 2, 4)
+            self.life_box.draw(self.x - 20 + i * 2, self.y + 30, 2, 4)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -1825,7 +2010,7 @@ class orc_Tower1:
         self.target_y = 0
 
         self.hp = 50
-        self.atk = 0.3
+        self.atk = 0.2
         self.range = 100
 
         if orc_Tower1.image == None:
@@ -1863,7 +2048,7 @@ class orc_Tower1:
             self.bomb.draw(self.x + (self.target_x - self.x) * (self.frame + 1) / 4,
                            self.y + (self.target_y - self.y) * (self.frame + 1) / 4)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 30 + i, self.y + 40, 1, 5)
+            self.life_box.draw(self.x - 25 + i, self.y + 45, 2, 5)
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 20, self.y + 30
@@ -1942,7 +2127,7 @@ class orc_Tower2:
             self.bomb.draw(self.x + (self.target_x - self.x) * (self.frame + 1) / 4,
                            self.y + (self.target_y - self.y) * (self.frame + 1) / 4)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 30 + i, self.y + 40, 1, 5)
+            self.life_box.draw(self.x - 25 + i, self.y + 45, 2, 5)
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 20, self.y + 30
@@ -1988,7 +2173,7 @@ class orc_Castle:
     def draw(self):
         self.image.draw(self.x, self.y, 100, 100)
         for i in range(int(self.hp)):
-            self.life_box.draw(self.x - 50 + i, self.y + 50, 1, 5)
+            self.life_box.draw(self.x - 50 + i, self.y + 55, 2, 5)
 
     def get_bb(self):
         return self.x - 50, self.y - 30, self.x + 50, self.y + 30

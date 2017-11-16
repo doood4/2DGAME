@@ -27,7 +27,7 @@ card_type = 0
 card_no = 0
 
 # 게임 변수
-Gold = 150
+Gold = 9999
 Human_Score = 0
 Orc_Score = 0
 selection = -1
@@ -48,7 +48,7 @@ peasantList= []
 unitList = []
 buildingList= []
 cardList = []
-numList = [0, 1, 2, 3, 4]
+numList = [0, 1, 2, 3, 4, 5]
 ########################
 
 def TIMER():
@@ -197,7 +197,7 @@ def create_world():
     # 시작 카드 설정
     init_cards()
 
-    map = load_image('1d.png')
+    map = load_image('1c.png')
     back_frame = load_image('Images\\back.png')
     commandbar = load_image('Images\\commandbar_frame.png')
     qwer = load_image('Images\\qwer.png')
@@ -372,6 +372,11 @@ def handle_events(frame_time):
                         unitList.append(unit)
                         change_card()
                         selection = -1
+                    elif cardList[selection].type == 5:
+                        unit = Gryphon()
+                        unitList.append(unit)
+                        change_card()
+                        selection = -1
 
         elif event.type == SDL_MOUSEBUTTONUP:
             if event.button == SDL_BUTTON_LEFT:
@@ -381,9 +386,9 @@ def handle_events(frame_time):
 def update(frame_time):
     # 게임 종료 조건
     if Human_Score == 3 or Orc_Score == 3:
-        game_framework.change_state(pause_state)
+        game_framework.push_state(pause_state)
     if TIME == 300:
-        game_framework.change_state(pause_state)
+        game_framework.push_state(pause_state)
 
     # 시간 체크
     TIMER()
@@ -407,7 +412,7 @@ def update(frame_time):
 def draw_scene():
 
     back_frame.draw(290, 340, 580, 680)
-    #map.draw(120+230,340,460,680)
+    map.draw(120+230,340,460,680)
 
     commandbar.draw(60, 340, 120, 680)
     qwer.draw(60,250)
@@ -417,11 +422,11 @@ def draw_scene():
     #draw_number(TIME, 80, 630)
 
     # 휴먼 점수
-    draw_number(Human_Score, 90, 580)
+    draw_number(Human_Score, 100, 580)
     # 오크 점수
-    draw_number(Orc_Score, 90, 550)
+    draw_number(Orc_Score, 100, 550)
     # 글로벌 골드
-    draw_number(Gold, 90, 520)
+    draw_number(Gold, 100, 520)
 
     # 카드 그리기
     draw_cards()
