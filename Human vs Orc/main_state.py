@@ -27,7 +27,7 @@ card_type = 0
 card_no = 0
 
 # 게임 변수
-Gold = 9999
+Gold = 50000
 Human_Score = 0
 Orc_Score = 0
 selection = -1
@@ -48,7 +48,7 @@ peasantList= []
 unitList = []
 buildingList= []
 cardList = []
-numList = [0, 1, 2, 3, 4, 5]
+numList = [1, 2, 3, 4, 5]
 ########################
 
 def TIMER():
@@ -78,17 +78,17 @@ def draw_number(A,x,y):
 def draw_cards():
     global cardList
     #current
-    for i in range(4):
+    for i in range(3):
         cardList[i].image.clip_draw(cardList[i].type * 60, 0, 60,80,70,350 - cardList[i].no*100)
 
     #next
-    cardList[4].image.clip_draw(cardList[4].type*60,0,60,80,70,440,40,60)
+    cardList[3].image.clip_draw(cardList[3].type*60,0,60,80,70,440,40,60)
 
 # 카드 초기 설정
 def init_cards():
     global numList,cardList,card_type,card_no
 
-    for i in range(5):
+    for i in range(4):
         x = random.randint(0,len(numList)-1)
         card_type = numList[x]
         card_no = i
@@ -102,12 +102,12 @@ def change_card():
 
     numList.append(cardList[selection].type)
     Gold -= cardList[selection].cost
-    cardList[selection].type = cardList[4].type
-    cardList[selection].cost = cardList[4].cost
-    del (cardList[4])
+    cardList[selection].type = cardList[3].type
+    cardList[selection].cost = cardList[3].cost
+    del (cardList[3])
     x = random.randint(0, len(numList) - 1)
     card_type = numList[x]
-    card_no = 4
+    card_no = 3
     card = Card()
     cardList.append(card)
     numList.remove(card_type)
@@ -248,52 +248,29 @@ def handle_events(frame_time):
                     selection = -1
                 else:
                     selection= 0
-                    if Gold >= cardList[selection].cost:
-                        # 일꾼
-                        if cardList[selection].type == 0:
-                            peasant = Peasant()
-                            peasantList.append(peasant)
-                            change_card()
-                            selection = -1
 
             elif event.key == SDLK_w:
                 if selection == 1:
                     selection = -1
                 else:
                     selection = 1
-                    if Gold >= cardList[selection].cost:
-                        # 일꾼
-                        if cardList[selection].type == 0:
-                            peasant = Peasant()
-                            peasantList.append(peasant)
-                            change_card()
-                            selection = -1
 
             elif event.key == SDLK_e:
                 if selection == 2:
                     selection = -1
                 else:
                     selection = 2
-                    if Gold >= cardList[selection].cost:
-                        # 일꾼
-                        if cardList[selection].type == 0:
-                            peasant = Peasant()
-                            peasantList.append(peasant)
-                            change_card()
-                            selection = -1
-
+            # 일꾼
             elif event.key == SDLK_r:
                 if selection == 3:
                     selection = -1
                 else:
                     selection = 3
-                    if Gold >= cardList[selection].cost:
-                        # 일꾼
-                        if cardList[selection].type == 0:
-                            peasant = Peasant()
-                            peasantList.append(peasant)
-                            change_card()
-                            selection = -1
+                    if Gold >= 50:
+                        Gold -= 50
+                        peasant = Peasant()
+                        peasantList.append(peasant)
+                        selection = -1
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
@@ -354,27 +331,27 @@ def handle_events(frame_time):
                 if selection != -1 and build is True:
                     if cardList[selection].type == 1:
                         unit = Footman()
-                        unitList.append(unit)
+                        unitList.insert(0,unit)
                         change_card()
                         selection = -1
                     elif cardList[selection].type == 2:
                         unit = Archer()
-                        unitList.append(unit)
+                        unitList.insert(0,unit)
                         change_card()
                         selection = -1
                     elif cardList[selection].type == 3:
                         unit = Knight()
-                        unitList.append(unit)
+                        unitList.insert(0,unit)
                         change_card()
                         selection = -1
                     elif cardList[selection].type == 4:
                         unit = Mage()
-                        unitList.append(unit)
+                        unitList.insert(0,unit)
                         change_card()
                         selection = -1
                     elif cardList[selection].type == 5:
                         unit = Gryphon()
-                        unitList.append(unit)
+                        unitList.insert(0,unit)
                         change_card()
                         selection = -1
 
@@ -439,17 +416,17 @@ def draw_scene():
     #    enemy.draw_bb()
     #    enemy.draw_rb()
 
-    # 적 뒤에서 부터 그리기
-    for i in range(len(enemyList)):
-        enemyList[-i].draw()
-        enemyList[-i].draw_bb()
-        #enemyList[-i].draw_rb()
-        #enemyList[-i].draw_ab()
+    # 적 그리기
+    for enemy in enemyList:
+        enemy.draw()
+        #enemy.draw_bb()
+        #enemy.draw_rb()
+        #enemy.draw_ab()
 
     # 아군 그리기
     for unit in unitList:
         unit.draw()
-        unit.draw_bb()
+        #unit.draw_bb()
         #unit.draw_rb()
         #unit.draw_ab()
 
