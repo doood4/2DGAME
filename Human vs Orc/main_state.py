@@ -14,6 +14,7 @@ name = "MainState"
 current_time = 0.0
 TIME = 0
 timer = 0
+gametime = 0 # 게임 진행 시간
 
 # 마우스 상수
 mx = 0
@@ -27,11 +28,12 @@ card_type = 0
 card_no = 0
 
 # 게임 변수
-Gold = 50000
+Gold = 0
 Human_Score = 0
 Orc_Score = 0
-selection = -1
+selection = 0
 
+#오크 타워 파괴 판별 상수
 orc_t1 = 0
 orc_t2 = 0
 
@@ -51,12 +53,64 @@ peasantList= []
 unitList = []
 buildingList= []
 cardList = []
-numList = [1, 2, 3, 4, 5]
+numList = []
 ########################
+
+def init():
+    global current_time, TIME, timer, gametime, mx,my,ms,click,build,card_type,card_no,Gold,Human_Score,Orc_Score,\
+    selection, orc_t1, orc_t2, cursor, map, back_frame, commandbar, qwer, sqwer, numbers, unitselect, enemyList,\
+    peasantList,unitList, buildingList, cardList, numList, name
+
+    name = "MainState"
+
+    # 시간 상수
+    current_time = int(get_time())
+    TIME = 0
+    timer = 0
+    gametime = 179
+
+    # 마우스 상수
+    mx = 0
+    my = 0
+    ms = 0
+    click = False
+    build = True
+
+    # 카드 설정 상수
+    card_type = 0
+    card_no = 0
+
+    # 게임 변수
+    Gold = 9999
+    Human_Score = 0
+    Orc_Score = 0
+    selection = -1
+
+    orc_t1 = 0
+    orc_t2 = 0
+
+    # 이미지
+    cursor = None
+    map = None
+    back_frame = None
+    commandbar = None
+    qwer = None
+    sqwer = None
+    numbers = None
+    unitselect = None
+
+    ######### 리스트 #######
+    enemyList = []
+    peasantList = []
+    unitList = []
+    buildingList = []
+    cardList = []
+    numList = [1, 2, 3, 4, 5]
+
 
 def TIMER():
     global TIME
-    TIME = int(get_time())
+    TIME = int(get_time()) - current_time
 
 # 숫자그리는 함수(변수,좌표)
 def draw_number(A,x,y):
@@ -183,6 +237,8 @@ def create_world():
     global peasantList, commandbar, qwer, sqwer, unitselect, back_frame, cursor, cardList, card_type, card_no, \
         enemyList, map
 
+    init()
+
     # 시작 일꾼
     peasant = Peasant()
     peasantList.append(peasant)
@@ -219,10 +275,20 @@ def create_world():
 
 
 def destroy_world():
-    global cursor, back_frame
-
+    global peasantList, commandbar, qwer, sqwer, unitselect, back_frame, cursor, cardList, card_type, card_no, \
+        enemyList, map
+    del(peasantList)
+    del(commandbar)
+    del(qwer)
+    del(sqwer)
+    del(unitselect)
     del (back_frame)
     del (cursor)
+    del(cardList)
+    del(card_type)
+    del(card_no)
+    del(enemyList)
+    del(map)
 
 
 def enter():
@@ -293,52 +359,32 @@ def handle_events(frame_time):
                         selection = -1
                     else:
                         selection = 0
-                        if Gold >= cardList[selection].cost:
-                            # 일꾼
-                            if cardList[selection].type == 0:
-                                peasant = Peasant()
-                                peasantList.append(peasant)
-                                change_card()
-                                selection = -1
+
                 # w클릭
                 if mx > 40 and mx < 100 and my > 210 and my < 290:
                     if selection == 1:
                         selection = -1
                     else:
                         selection = 1
-                        if Gold >= cardList[selection].cost:
-                            # 일꾼
-                            if cardList[selection].type == 0:
-                                peasant = Peasant()
-                                peasantList.append(peasant)
-                                change_card()
-                                selection = -1
+
                 # e클릭
                 if mx > 40 and mx < 100 and my > 110 and my < 190:
                     if selection == 2:
                         selection = -1
                     else:
                         selection = 2
-                        if Gold >= cardList[selection].cost:
-                            # 일꾼
-                            if cardList[selection].type == 0:
-                                peasant = Peasant()
-                                peasantList.append(peasant)
-                                change_card()
-                                selection = -1
+
                 # r클릭
                 if mx > 40 and mx < 100 and my > 10 and my <90:
                     if selection == 3:
                         selection = -1
                     else:
                         selection = 3
-                        if Gold >= cardList[selection].cost:
-                            # 일꾼
-                            if cardList[selection].type == 0:
-                                peasant = Peasant()
-                                peasantList.append(peasant)
-                                change_card()
-                                selection = -1
+                        if Gold >= 50:
+                            Gold -= 50
+                            peasant = Peasant()
+                            peasantList.append(peasant)
+                            selection = -1
                 # 유닛 소환
                 if selection != -1 and build is True:
                     if cardList[selection].type == 1:
@@ -374,10 +420,10 @@ def handle_events(frame_time):
 
 def update(frame_time):
     # 게임 종료 조건
-    if Human_Score == 3 or Orc_Score == 3:
-        game_framework.push_state(pause_state)
+    if Human_Score >= 3 or Orc_Score >= 3:
+        game_framework.push_state(result_state)
     if TIME == 300:
-        game_framework.push_state(pause_state)
+        game_framework.push_state(result_state)
 
     # 시간 체크
     TIMER()
@@ -401,13 +447,13 @@ def update(frame_time):
 def draw_scene():
 
     back_frame.draw(290, 340, 580, 680)
-    #map.draw(120+230,340,460,680)
+    map.draw(120+230,340,460,680)
 
     commandbar.draw(60, 340, 120, 680)
     qwer.draw(60,250)
     # 타이머
-    draw_number(int((180 - TIME) / 60), 50, 630)
-    draw_number(int(180 - TIME) % 60, 80, 630)
+    draw_number(int((gametime - TIME) / 60), 50, 630)
+    draw_number(int(gametime - TIME) % 60, 80, 630)
     #draw_number(TIME, 80, 630)
 
     # 휴먼 점수

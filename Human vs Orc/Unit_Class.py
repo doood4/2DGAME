@@ -1221,7 +1221,7 @@ class human_Castle:
     def update(self, frame_time):
         if self.hp <= 0:
             main_state.unitList.remove(self)
-            main_state.Orc_Score += 1
+            main_state.Orc_Score += 3
 
 
     def draw(self):
@@ -2420,7 +2420,7 @@ class orc_Castle:
     def update(self, frame_time):
         if self.hp <= 0:
             main_state.enemyList.remove(self)
-            main_state.Human_Score += 1
+            main_state.Human_Score += 3
 
     def draw(self):
         self.image.draw(self.x, self.y, 100, 100)
