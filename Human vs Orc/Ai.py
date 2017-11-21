@@ -1,40 +1,56 @@
 from pico2d import *
-from Unit_Class import *
+import Unit_Class
 import main_state
 
+summon_x = 0
+summon_y = 0
 
-def Ai():
+def ai():
+    global summon_x, summon_y
 
+    # 지속적으로 그런트 소환
     if main_state.TIME % 5 == 0 and get_time() - main_state.TIME > 0.01 and get_time() - main_state.TIME < 0.02:
-        enemy = Grunt()
-        main_state.enemyList.append(enemy)
-        enemy = Grunt()
-        main_state.enemyList.append(enemy)
-        enemy = Troll()
-        main_state.enemyList.append(enemy)
-        enemy = Ogre()
-        main_state.enemyList.append(enemy)
+        for i in range(4):
+            summon_x = i * 100 + 200
+            summon_y = 450
+            enemy = Unit_Class.Grunt()
+            main_state.enemyList.append(enemy)
 
-
-
-        #troll = Troll()
-        #main_state.enemyList.append(troll)
-
-        #troll = Troll()
-        #main_state.enemyList.append(troll)
-        #devil = Devil()
-        #main_state.enemyList.append(devil)
-
-
+    # 지속적으로 트롤 소환
     if main_state.TIME % 10 == 0 and get_time() - main_state.TIME > 0.01 and get_time() - main_state.TIME < 0.02:
-        enemy = Death_kinght()
+        for i in range(2):
+            summon_x = i*50 + 500
+            summon_y = 500
+            #enemy = Unit_Class.Troll()
+            #main_state.enemyList.append(enemy)
+
+    # 지속적으로 오우거 , 데스나이트 소환
+    if main_state.TIME % 20 == 0 and get_time() - main_state.TIME > 0.01 and get_time() - main_state.TIME < 0.02:
+        summon_x = 230
+        summon_y = 480
+        enemy = Unit_Class.Ogre()
         main_state.enemyList.append(enemy)
-        enemy = Devil()
+
+        summon_x = 450
+        summon_y = 480
+        enemy = Unit_Class.Ogre()
+        main_state.enemyList.append(enemy)
+        pass
+
+    # 타워 깨지면 데빌 소한
+    if main_state.orc_t1 == 1:
+        main_state.orc_t1 = 0
+        summon_x = 230
+        summon_y = 520
+        enemy = Unit_Class.Devil()
         main_state.enemyList.append(enemy)
 
-
-
-
+    if main_state.orc_t2 == 1:
+        main_state.orc_t2 = 0
+        summon_x = 450
+        summon_y = 520
+        enemy = Unit_Class.Devil()
+        main_state.enemyList.append(enemy)
 
 
 

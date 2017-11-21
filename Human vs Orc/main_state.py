@@ -2,7 +2,7 @@ from pico2d import *
 import random
 from Unit_Class import *
 from Object_Class import *
-from Ai import *
+import Ai
 import game_framework
 import title_state
 import pause_state
@@ -31,6 +31,9 @@ Gold = 50000
 Human_Score = 0
 Orc_Score = 0
 selection = -1
+
+orc_t1 = 0
+orc_t2 = 0
 
 # 이미지
 cursor = None
@@ -77,24 +80,33 @@ def draw_number(A,x,y):
 # 카드 그리기
 def draw_cards():
     global cardList
+
     #current
-    for i in range(3):
+    for i in range(4):
         cardList[i].image.clip_draw(cardList[i].type * 60, 0, 60,80,70,350 - cardList[i].no*100)
 
     #next
-    cardList[3].image.clip_draw(cardList[3].type*60,0,60,80,70,440,40,60)
+    cardList[4].image.clip_draw(cardList[4].type*60,0,60,80,70,440,40,60)
+
 
 # 카드 초기 설정
 def init_cards():
     global numList,cardList,card_type,card_no
 
-    for i in range(4):
-        x = random.randint(0,len(numList)-1)
-        card_type = numList[x]
-        card_no = i
-        card = Card()
-        cardList.append(card)
-        numList.remove(card_type)
+    for i in range(5):
+        if i == 3:
+            card_type = 0
+            card_no = i
+            card = Card()
+            cardList.append(card)
+        else:
+            x = random.randint(0, len(numList) - 1)
+            card_type = numList[x]
+            card_no = i
+            card = Card()
+            cardList.append(card)
+            numList.remove(card_type)
+
 
 # 카드 바꾸기
 def change_card():
@@ -102,12 +114,12 @@ def change_card():
 
     numList.append(cardList[selection].type)
     Gold -= cardList[selection].cost
-    cardList[selection].type = cardList[3].type
-    cardList[selection].cost = cardList[3].cost
-    del (cardList[3])
+    cardList[selection].type = cardList[4].type
+    cardList[selection].cost = cardList[4].cost
+    del (cardList[4])
     x = random.randint(0, len(numList) - 1)
     card_type = numList[x]
-    card_no = 3
+    card_no = 4
     card = Card()
     cardList.append(card)
     numList.remove(card_type)
@@ -234,14 +246,14 @@ def handle_events(frame_time):
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_MOUSEMOTION :
+        elif event.type == SDL_MOUSEMOTION:
             mx = event.x
             my = 680 - event.y
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_p:
-                game_framework.push_state(pause_state)
+                game_framework.push_state(result_state)
 
             elif event.key == SDLK_q:
                 if selection == 0:
@@ -371,7 +383,7 @@ def update(frame_time):
     TIMER()
 
     # 컴퓨터 Ai
-    Ai()
+    Ai.ai()
 
     # 적
     for enemy in enemyList:
@@ -389,7 +401,7 @@ def update(frame_time):
 def draw_scene():
 
     back_frame.draw(290, 340, 580, 680)
-    map.draw(120+230,340,460,680)
+    #map.draw(120+230,340,460,680)
 
     commandbar.draw(60, 340, 120, 680)
     qwer.draw(60,250)
@@ -441,13 +453,17 @@ def draw_scene():
     # 빌드여부 그리기기
     unit_build()
 
-    # 커서는 최후방
-    cursor.clip_draw(click * 50, 0, 50, 50, mx, my, 40, 40)
+
 
 
 def draw(frame_time):
     clear_canvas()
+
     draw_scene()
+
+    # 커서는 최후방
+    cursor.clip_draw(click * 50, 0, 50, 50, mx, my, 40, 40)
+
     update_canvas()
 
 

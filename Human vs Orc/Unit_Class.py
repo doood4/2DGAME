@@ -1,6 +1,7 @@
 from pico2d import *
 import random
 import main_state
+import Ai
 
 #####################################
 #############  HUMAN  ###############
@@ -8,7 +9,7 @@ import main_state
 class Peasant:
     image = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 6.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -61,7 +62,7 @@ class Footman:
     image = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)                     # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)                     # 10 pixel 40 cm
     RUN_SPEED_KMPH = 4.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -250,7 +251,7 @@ class Archer:
     arrow = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)                     # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)                     # 10 pixel 40 cm
     RUN_SPEED_KMPH = 3.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -448,7 +449,7 @@ class Knight:
     image = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)                     # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)                     # 10 pixel 40 cm
     RUN_SPEED_KMPH = 8.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -637,7 +638,7 @@ class Mage:
     effect = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 3.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -842,7 +843,7 @@ class Gryphon:
     effect = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 8.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -1255,7 +1256,7 @@ class Grunt:
     image = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 4.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -1266,7 +1267,7 @@ class Grunt:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
+        self.x, self.y = Ai.summon_x, Ai.summon_y
         self.size = 100
         self.boundary = 15
         self.state = 4
@@ -1455,7 +1456,7 @@ class Troll:
     life_box = None
     axe = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 6.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -1466,7 +1467,7 @@ class Troll:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
+        self.x, self.y = Ai.summon_x, Ai.summon_y
         self.size = 100
         self.boundary = 15
         self.state = 4
@@ -1659,7 +1660,7 @@ class Ogre:
     image = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 2.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -1670,7 +1671,7 @@ class Ogre:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
+        self.x, self.y = Ai.summon_x, Ai.summon_y
         self.size = 130
         self.boundary = 30
         self.state = 4
@@ -1848,7 +1849,7 @@ class Death_kinght:
     atk1 = None
     atk2 = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 8.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -1859,7 +1860,7 @@ class Death_kinght:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
+        self.x, self.y = Ai.summon_x, Ai.summon_y
         self.size = 100
         self.boundary = 15
         self.state = 4
@@ -2051,7 +2052,7 @@ class Devil:
     effect = None
     life_box = None
 
-    PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+    PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 6.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -2062,7 +2063,7 @@ class Devil:
     FRAMES_PER_ACTION = 4
 
     def __init__(self):
-        self.x, self.y = random.randint(150, 500), random.randint(450, 500)
+        self.x, self.y = Ai.summon_x, Ai.summon_y
         self.size = 130
         self.boundary = 20
         self.state = 4
@@ -2074,8 +2075,8 @@ class Devil:
         self.y_vector = -1
 
         self.hp = 30
-        self.atk = 0.1
-        self.atk2 = 0.01
+        self.atk = 0.5
+        self.atk2 = 0.1
 
         if Devil.image == None:
             Devil.image = load_image('Images\\orc_devil.png')
@@ -2273,6 +2274,7 @@ class orc_Tower1:
         if self.hp <= 0:
             main_state.enemyList.remove(self)
             main_state.Human_Score += 1
+            main_state.orc_t1 = 1
 
         # 공격대상 없다
         for unit in main_state.unitList:
@@ -2352,6 +2354,7 @@ class orc_Tower2:
         if self.hp <= 0:
             main_state.enemyList.remove(self)
             main_state.Human_Score += 1
+            main_state.orc_t2 = 1
 
         # 공격대상 없다
         for unit in main_state.unitList:
