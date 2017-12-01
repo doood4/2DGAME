@@ -1774,30 +1774,36 @@ class Ogre:
             for unit in main_state.unitList:
                 if main_state.collide(self,unit):
                     self.motion = 4
+                    if self.frame == 4:
+                        unit.hp -= self.atk
+
                     if self.x > unit.x + 10:
                         if self.y > unit.y + 10:
                             self.state = 5
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 7
+                            break
                         else:
                             self.state = 6
+                            break
                     elif self.x < unit.x - 10:
-                        self.x_vector = 1
                         if self.y > unit.y + 10:
                             self.state = 3
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 1
+                            break
                         else:
                             self.state = 2
+                            break
                     else:
-                        self.x_vector = 0
                         if self.y > unit.y + 10:
                             self.state = 4
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 0
-                    if self.frame == 4:
-                        unit.hp -= self.atk
-                        break
+                            break
 
         self.life_time += frame_time
         distance = Ogre.RUN_SPEED_PPS * frame_time
@@ -1972,30 +1978,36 @@ class Death_kinght:
                     self.motion = 4
                     self.target_x = unit.x
                     self.target_y = unit.y
+                    if self.frame == 4:
+                        unit.hp -= self.atk
+
                     if self.x > unit.x + 10:
                         if self.y > unit.y + 10:
                             self.state = 5
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 7
+                            break
                         else:
                             self.state = 6
+                            break
                     elif self.x < unit.x - 10:
-                        self.x_vector = 1
                         if self.y > unit.y + 10:
                             self.state = 3
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 1
+                            break
                         else:
                             self.state = 2
+                            break
                     else:
-                        self.x_vector = 0
                         if self.y > unit.y + 10:
                             self.state = 4
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 0
-                    if self.frame == 4:
-                        unit.hp -= self.atk
-                        break
+                            break
 
         self.life_time += frame_time
         distance = Death_kinght.RUN_SPEED_PPS * frame_time
@@ -2170,30 +2182,36 @@ class Devil:
                 if main_state.collide(self, unit):
                     unit.hp -= self.atk2
                     self.motion = 4
+                    if self.frame == 4:
+                        unit.hp -= self.atk
+
                     if self.x > unit.x + 10:
                         if self.y > unit.y + 10:
                             self.state = 5
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 7
+                            break
                         else:
                             self.state = 6
+                            break
                     elif self.x < unit.x - 10:
-                        self.x_vector = 1
                         if self.y > unit.y + 10:
                             self.state = 3
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 1
+                            break
                         else:
                             self.state = 2
+                            break
                     else:
-                        self.x_vector = 0
                         if self.y > unit.y + 10:
                             self.state = 4
+                            break
                         elif self.y < unit.y - 10:
                             self.state = 0
-                    if self.frame == 4:
-                        unit.hp -= self.atk
-                        break
+                            break
 
         self.life_time += frame_time
         distance = Devil.RUN_SPEED_PPS * frame_time
