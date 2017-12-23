@@ -347,6 +347,7 @@ def handle_events(frame_time):
                     if Gold >= 50:
                         Gold -= 50
                         peasant = Peasant()
+                        peasant.sound.play()
                         peasantList.append(peasant)
                         selection = -1
 
@@ -383,6 +384,7 @@ def handle_events(frame_time):
                         if Gold >= 50:
                             Gold -= 50
                             peasant = Peasant()
+                            peasant.sound.play()
                             peasantList.append(peasant)
                             selection = -1
                 # 유닛 소환

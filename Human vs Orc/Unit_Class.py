@@ -8,6 +8,7 @@ import Ai
 
 class Peasant:
     image = None
+    sound = None
 
     PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 6.0  # Km/h
@@ -30,6 +31,11 @@ class Peasant:
 
         if Peasant.image == None:
             Peasant.image = self.image = load_image('Images\\human_peasant.png')
+        if Peasant.sound == None:
+            Peasant.sound = load_wav('Sounds\\Peasant_build.wav')
+            Peasant.sound.set_volume(32)
+
+
 
     def update(self,frame_time):
         if self.vector == (1,0):
@@ -62,6 +68,9 @@ class Footman:
     image = None
     life_box = None
 
+    build_sound = None
+    atk_sound = None
+
     PIXEL_PER_METER = (10.0 / 0.4)                     # 10 pixel 40 cm
     RUN_SPEED_KMPH = 4.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -90,6 +99,15 @@ class Footman:
             Footman.image = load_image('Images\\human_footman.png')
         if Footman.life_box == None:
             Footman.life_box = load_image('Images\\human_life.png')
+
+        if Footman.build_sound == None:
+            Footman.build_sound = load_wav('Sounds\\Footman_build.wav')
+            Footman.build_sound.set_volume(32)
+        if Footman.atk_sound == None:
+            Footman.atk_sound = load_wav('Sounds\\Footman_atk.wav')
+            Footman.atk_sound.set_volume(16)
+
+        self.build_sound.play()
 
     def update(self,frame_time):
         # 죽음
@@ -172,6 +190,7 @@ class Footman:
                     self.motion = 4
                     if self.frame == 4:
                         enemy.hp -= self.atk
+                        self.atk_sound.play()
 
                     if self.x > enemy.x + 10:
                         if self.y > enemy.y + 10:
@@ -251,6 +270,9 @@ class Archer:
     arrow = None
     life_box = None
 
+    build_sound = None
+    atk_sound = None
+
     PIXEL_PER_METER = (10.0 / 0.4)                     # 10 pixel 40 cm
     RUN_SPEED_KMPH = 3.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -285,6 +307,15 @@ class Archer:
             Archer.life_box = load_image('Images\\human_life.png')
         if Archer.arrow == None:
             Archer.arrow = load_image('Images\\archer_arrow.png')
+
+        if Archer.build_sound == None:
+            Archer.build_sound = load_wav('Sounds\\Archer_build.wav')
+            Archer.build_sound.set_volume(32)
+        if Archer.atk_sound == None:
+            Archer.atk_sound = load_wav('Sounds\\Archer_atk.wav')
+            Archer.atk_sound.set_volume(10)
+
+        self.build_sound.play()
 
     def update(self,frame_time):
         # 죽음
@@ -368,6 +399,7 @@ class Archer:
                     self.target_x = enemy.x
                     self.target_y = enemy.y
                     if self.frame == 4:
+                        self.atk_sound.play()
                         enemy.hp -= self.atk
 
                     if self.x > enemy.x + 10:
@@ -449,6 +481,9 @@ class Knight:
     image = None
     life_box = None
 
+    build_sound = None
+    atk_sound = None
+
     PIXEL_PER_METER = (10.0 / 0.4)                     # 10 pixel 40 cm
     RUN_SPEED_KMPH = 8.0                               # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -477,6 +512,15 @@ class Knight:
             Knight.image = load_image('Images\\human_knight.png')
         if Knight.life_box == None:
             Knight.life_box = load_image('Images\\human_life.png')
+
+        if Knight.build_sound == None:
+            Knight.build_sound = load_wav('Sounds\\Knight_build.wav')
+            Knight.build_sound.set_volume(32)
+        if Knight.atk_sound == None:
+            Knight.atk_sound = load_wav('Sounds\\Knight_atk.wav')
+            Knight.atk_sound.set_volume(16)
+
+        self.build_sound.play()
 
     def update(self,frame_time):
         # 죽음
@@ -638,6 +682,9 @@ class Mage:
     effect = None
     life_box = None
 
+    build_sound = None
+    atk_sound = None
+
     PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 3.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -672,6 +719,15 @@ class Mage:
             Mage.life_box = load_image('Images\\human_life.png')
         if Mage.effect == None:
             Mage.effect = load_image('Images\\mage_atk.png')
+
+        if Mage.build_sound == None:
+            Mage.build_sound = load_wav('Sounds\\Mage_build.wav')
+            Mage.build_sound.set_volume(32)
+        if Mage.atk_sound == None:
+            Mage.atk_sound = load_wav('Sounds\\Mage_atk.wav')
+            Mage.atk_sound.set_volume(16)
+
+        self.build_sound.play()
 
     def update(self,frame_time):
         # 죽음
@@ -757,6 +813,7 @@ class Mage:
                     self.target_y = enemy.y
 
                     if self.frame == 4:
+                        self.atk_sound.play()
                         enemy.hp -= self.atk
 
                     if self.x > enemy.x + 10:
@@ -843,6 +900,9 @@ class Gryphon:
     effect = None
     life_box = None
 
+    build_sound = None
+    atk_sound = None
+
     PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel 40 cm
     RUN_SPEED_KMPH = 8.0  # Km/h
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -876,6 +936,15 @@ class Gryphon:
             Gryphon.effect = load_image('Images\\gryphon_atk.png')
         if Gryphon.life_box == None:
             Gryphon.life_box = load_image('Images\\human_life.png')
+
+        if Gryphon.build_sound == None:
+            Gryphon.build_sound = load_wav('Sounds\\Gryphon_build.wav')
+            Gryphon.build_sound.set_volume(32)
+        if Gryphon.atk_sound == None:
+            Gryphon.atk_sound = load_wav('Sounds\\Gryphon_atk.wav')
+            Gryphon.atk_sound.set_volume(16)
+
+        self.build_sound.play()
 
     def update(self, frame_time):
         # 죽음
@@ -960,6 +1029,7 @@ class Gryphon:
                     self.target_y = enemy.y
 
                     if self.frame == 4:
+                        self.atk_sound.play()
                         enemy.hp -= self.atk
 
                     if self.x > enemy.x + 10:
@@ -2264,6 +2334,8 @@ class orc_Tower1:
     life_box = None
     bomb = None
 
+    atk_sound = None
+
     TIME_PER_ACTION = 0.5
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 4
@@ -2288,6 +2360,10 @@ class orc_Tower1:
         if orc_Tower1.life_box == None:
             orc_Tower1.life_box = load_image('Images\\orc_life.png')
 
+        if orc_Tower1.atk_sound == None:
+            orc_Tower1.atk_sound = load_wav('Sounds\\orc_Tower_atk.wav')
+            orc_Tower1.atk_sound.set_volume(10)
+
     def update(self, frame_time):
         if self.hp <= 0:
             main_state.enemyList.remove(self)
@@ -2305,6 +2381,7 @@ class orc_Tower1:
                 self.target_x = unit.x
                 self.target_y = unit.y
                 if self.frame == 3:
+                    self.atk_sound.play()
                     unit.hp -= self.atk
                 break
 
